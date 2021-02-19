@@ -18,7 +18,7 @@ const howManyLeftToRemoveTextEl = document.getElementById("howManyLeftText");
 const errorsLevelOneEl = document.getElementById("errorsLevelOne");
 
 // let id = document.getElementById("requestId").value;
-let id = "e07753de-1668-4979-8e59-981243b31bac";
+let id = "9be7c7f2-abcf-4ce7-98cd-4704752bfa4f";
 let currentStep = 0;
 let relevantBoats;
 let theBoat;
@@ -58,7 +58,7 @@ backStepBtn.addEventListener('click', function () {
     }
 })
 
-function approveAfterStepTwo() {
+async function approveAfterStepTwo() {
     let deletedRowers = [];
 
     deletedRowersSelectEl.childNodes.forEach(function (optionEl) {
@@ -68,10 +68,20 @@ function approveAfterStepTwo() {
     let data = JSON.stringify({
         reqId: id,
         boatSerialNumber: theBoat.serialNumber,
-        deletedRowers: deletedRowers
+        deletedRowers: JSON.stringify(deletedRowers)
     });
 
-
+    await fetch("/rowing-activities/approveOverflowRequest", {
+        method: 'post',
+        body: data,
+        headers: getPostHeaders()
+    }).then(async function (response) {
+        let resAsJson = await response.json();
+        if (!resAsJson.isSuccess) {
+            showError("Request couldn't be approved due to unknown problem");
+            close();
+        }
+    });
 }
 
 async function validateCurrentStep() {
@@ -268,10 +278,11 @@ function removeUnavailableRowers() {
         if (resAsJson.isSuccess) {
             return true;
         } else {
-            showError(resAsJson.data);
+            showError("All of the rowers are already taking part in other club activities at the same time frame." +
+                " The request has been automatically removed.");
             setTimeout(function () {
                 location.reload();
-            }, longTimeOutTime);
+            }, veryLongTimeOutTime);
         }
     });
 
