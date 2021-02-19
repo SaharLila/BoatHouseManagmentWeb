@@ -170,4 +170,10 @@ public class Request extends Model implements Serializable {
     void shallowSetOtherRowersList(List<Rower> list) {
         this.otherRowersList = list;
     }
+
+    public List<Rower> getAllRowers() {
+        List<Rower> result = new ArrayList<>(this.otherRowersList);
+        result.add(this.mainRower);
+        return result;
+    }
 }

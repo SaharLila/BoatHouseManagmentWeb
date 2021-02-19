@@ -1,12 +1,10 @@
 package server.servlet.collector.request;
 
-import com.google.gson.Gson;
 import engine.api.EngineContext;
 import engine.model.activity.request.Request;
 import engine.model.boat.Boat;
 import engine.model.rower.Rower;
 import server.servlet.json.template.model.request.RowersRequestPairsList;
-import server.servlet.json.template.model.rower.RowerJson;
 import server.utils.Utils;
 
 import javax.servlet.ServletException;
@@ -16,7 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @WebServlet(urlPatterns = "/collectors/requests/mergeable")
 public class MergeableRequestCollector extends HttpServlet {
@@ -56,11 +56,9 @@ public class MergeableRequestCollector extends HttpServlet {
 
         optionalRequestsToMerge.forEach(requestToMerge -> {
             String reqToMergeID = requestToMerge.getId();
-            rowersReqIdMap.put(requestToMerge.getMainRower(), reqToMergeID);
-
-            requestToMerge.getOtherRowersList()
+            requestToMerge.getAllRowers().stream()
+                    .filter(rower -> !reqToApprove.getAllRowers().contains(rower))
                     .forEach(rower -> rowersReqIdMap.put(rower, reqToMergeID));
-
         });
 
         return rowersReqIdMap;

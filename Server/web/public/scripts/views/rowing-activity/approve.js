@@ -27,7 +27,8 @@ const moveRowerBackBtn = document.getElementById("moveRowerBackBtn");
 const howManyToAddTextEl = document.getElementById("howManyToAddText");
 
 // let id = document.getElementById("requestId").value;
-let id = "d7b6e285-b342-4314-b503-5e6a568db350";
+// let id = "d7b6e285-b342-4314-b503-5e6a568db350";
+let id = "d9b280fe-4d87-4981-8bf0-0fb81c71f208" // Yotam's
 let currentStep = 0;
 let relevantBoats;
 let theBoat;
@@ -262,15 +263,20 @@ function initRowersToAdd() {
     availableRowersSelectEl.innerHTML = "";
     newRowersSelectEl.innerHTML = "";
     getAvailableRowersToMerge(id, theBoat.serialNumber).then(function (rowersReqIdList) {
-        rowersReqIdList.forEach(function (reqIdPair) {
-            let optionEl = buildRowerOptionEl(reqIdPair.rower);
-            optionEl.value = JSON.stringify({
-                rowerSerialNumber: reqIdPair.rower.serialNumber,
-                reqId: reqIdPair.reqId
-            });
+        if (howManyLeft > rowersReqIdList.length) {
+            showError("We couldn't find enough rowers that can join this request.")
+            close();
+        } else {
+            rowersReqIdList.forEach(function (reqIdPair) {
+                let optionEl = buildRowerOptionEl(reqIdPair.rower);
+                optionEl.value = JSON.stringify({
+                    rowerSerialNumber: reqIdPair.rower.serialNumber,
+                    reqId: reqIdPair.reqId
+                });
 
-            availableRowersSelectEl.appendChild(optionEl);
-        });
+                availableRowersSelectEl.appendChild(optionEl);
+            });
+        }
     });
 }
 
