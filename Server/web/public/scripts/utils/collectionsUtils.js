@@ -167,6 +167,26 @@ function getRequestsFromServer(id) {
     });
 }
 
+function getAvailableRowersToMerge(reqId, boatSerialNumber) {
+    let data = JSON.stringify({
+        reqId: reqId,
+        boatSerialNumber: boatSerialNumber
+    });
+
+    return fetch("/collectors/requests/mergeable", {
+        body: data,
+        method: 'post',
+        headers: getPostHeaders()
+    }).then(async function (response) {
+        let resAsJson = await response.json();
+        if (resAsJson.isSuccess) {
+            return resAsJson.data.pairs;
+        } else {
+            showError(resAsJson.data);
+        }
+    });
+}
+
 function duplicateRequestInServer(requestId) {
     let data = JSON.stringify({
         reqId: requestId

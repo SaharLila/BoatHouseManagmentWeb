@@ -6,6 +6,7 @@ const nextStepBtn = document.getElementById('nextStepBtn');
 const backStepBtn = document.getElementById('backStepBtn');
 const progressBar = document.getElementById('progressBar');
 const errors = document.getElementById('errors');
+
 // step 0 elements
 const boatListStepOne = document.getElementById('boatSelection');
 
@@ -17,8 +18,16 @@ const addToRequestBtn = document.getElementById("addToRequestBtn");
 const howManyLeftToRemoveTextEl = document.getElementById("howManyLeftText");
 const errorsLevelOneEl = document.getElementById("errorsLevelOne");
 
+//step 2
+const availableRowersSelectEl = document.getElementById("availableRowersSelect");
+const newRowersSelectEl = document.getElementById("newRowersSelect");
+const joinRowerToRequestBtn = document.getElementById("joinRowerToRequestBtn");
+const moveRowerBackBtn = document.getElementById("moveRowerBackBtn");
+const howManyToAddTextEl = document.getElementById("howManyToAddText");
+const errorsLevelTwoEl = errorsLevelOneEl;
+
 // let id = document.getElementById("requestId").value;
-let id = "9be7c7f2-abcf-4ce7-98cd-4704752bfa4f";
+let id = "d7b6e285-b342-4314-b503-5e6a568db350";
 let currentStep = 0;
 let relevantBoats;
 let theBoat;
@@ -105,7 +114,7 @@ async function validateCurrentStep() {
     } else if (currentStep === 1) {
         result = validateStepOne(errorsLevelOneEl);
         if (result) {
-            approveAfterStepTwo();
+            await approveAfterStepTwo();
         }
     } else {
 
@@ -197,26 +206,39 @@ function handleTooManyRowers() {
     });
 }
 
+function handleStageZero() {
+    getBoatsForRequestFromServer(id).then(function (boats) {
+        boatsList = boats;
+        if (boats.length === 0) {
+            showErrorsInUnOrderedListEl(["Couldn't find any boat that can be used for this request"], errors);
+        } else {
+            boats.forEach(function (boat) {
+                boatListStepOne.appendChild(buildBoatOptionEl(boat, false));
+            });
+        }
+    });
+}
+
+function initRowersToAdd() {
+    getAvailableRowersToMerge(id, theBoat.serialNumber).then(function (rowersReqIdMap){
+        alert(JSON.stringify(rowersReqIdMap[0].rower));
+    });
+}
+
+
+function handleMergeOtherRequest() {
+    initRowersToAdd();
+}
+
 function handleElementsByStep() {
     errors.innerHTML = "";
 
     if (currentStep === 0) {
-        getBoatsForRequestFromServer(id).then(function (boats) {
-            boatsList = boats;
-            if (boats.length === 0) {
-                showErrorsInUnOrderedListEl(["Couldn't find any boat that can be used for this request"], errors);
-            } else {
-                boats.forEach(function (boat) {
-                    boatListStepOne.appendChild(buildBoatOptionEl(boat, false));
-                });
-            }
-        });
+        handleStageZero();
     } else if (currentStep === 1) {
         handleTooManyRowers();
-
     } else if (currentStep === 2) {
-        // not enough
-
+        handleMergeOtherRequest();
     } else if (currentStep === 3) {
         // finish
 

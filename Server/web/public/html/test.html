@@ -85,20 +85,50 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!--step two div-->
+                                    <!--step three div-->
                                     <div class="tab-pane" id="removeRowersTab">
                                         <div style="margin-top:50px; text-align: center">
                                             <h4 style='font-family: "Arial", sans-serif'>YOU DON'T HAVE ENOUGH ROWERS IN YOUR REQUEST</h4>
-                                            <h5 style='font-family: "Arial", sans-serif'>SELECT A REQUEST TO MERGE WITH</h5>
+                                            <h5 style='font-family: "Arial", sans-serif'>SELECT ROWERS THAT WILL BE ADDED TO THE REQUEST</h5>
                                             <br>
-                                            <div style="margin-bottom: 50px;" class="row col-md-12">
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-8">
-                                                    <select id="requestSelect" class="select2El form-control"
-                                                            data-style="btn btn-link">
-                                                    </select>
+                                        </div>
+                                        <div class="row" style="padding-top: 20px">
+                                            <div class="col-md-12" style="text-align: center">
+                                                <h6 style="color: red" id="howManyToAddText">You have to add X more
+                                                    rowers</h6>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5" style="text-align: center">
+                                                <h6>Available Rowers</h6>
+                                                <select id="availableRowersSelect" class="rowersSelect form-select"
+                                                        size="9">
+
+                                                </select>
+                                            </div>
+                                            <div class="col-12 col-md-2"
+                                                 style="padding-top: 20px; padding-bottom: 20px;">
+                                                <div style="margin-top: 20px; margin-bottom: 20px;" class="row">
+                                                    <div class="col-6 col-md-12">
+                                                        <button id="joinRowerToRequestBtn"
+                                                                class="btn-sm btn-round btn-light">
+                                                            <img src="/public/images/right-arrow.png"
+                                                                 alt="Add Rower To Request">
+                                                        </button>
+                                                    </div>
+                                                    <div class="approveRequestRightButton col-6 col-md-12">
+                                                        <button id="moveRowerBackBtn" class="btn-sm btn-round btn-light">
+                                                            <img src="/public/images/left-arrow.png"
+                                                                 alt="Move Rower Back">
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                                <div class="col-md-2"></div>
+                                            </div>
+                                            <div class="col-md-5" style="text-align: center">
+                                                <h6>New Rowers</h6>
+                                                <select id="newRowersSelect" class="rowersSelect form-select"
+                                                        size="9">
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
