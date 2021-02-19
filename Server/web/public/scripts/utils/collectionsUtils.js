@@ -161,7 +161,8 @@ function getRequestsFromServer(id) {
                 if (request.id === id) {
                     req = request;
                 }
-            })
+            });
+
             return req;
         }
     });

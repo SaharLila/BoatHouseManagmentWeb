@@ -5,7 +5,9 @@ const infoTab = document.getElementById('infoTab');
 const nextStepBtn = document.getElementById('nextStepBtn');
 const backStepBtn = document.getElementById('backStepBtn');
 const progressBar = document.getElementById('progressBar');
+
 const errors = document.getElementById('errors');
+const errorsMiddleStepEl = document.getElementById("errorsLevelOne");
 
 // step 0 elements
 const boatListStepOne = document.getElementById('boatSelection');
@@ -16,7 +18,6 @@ const deletedRowersSelectEl = document.getElementById("deleteRowersSelect");
 const deleteRowerBtn = document.getElementById("deleteFromRequestBtn");
 const addToRequestBtn = document.getElementById("addToRequestBtn");
 const howManyLeftToRemoveTextEl = document.getElementById("howManyLeftText");
-const errorsLevelOneEl = document.getElementById("errorsLevelOne");
 
 //step 2
 const availableRowersSelectEl = document.getElementById("availableRowersSelect");
@@ -24,14 +25,13 @@ const newRowersSelectEl = document.getElementById("newRowersSelect");
 const joinRowerToRequestBtn = document.getElementById("joinRowerToRequestBtn");
 const moveRowerBackBtn = document.getElementById("moveRowerBackBtn");
 const howManyToAddTextEl = document.getElementById("howManyToAddText");
-const errorsLevelTwoEl = errorsLevelOneEl;
 
 // let id = document.getElementById("requestId").value;
 let id = "d7b6e285-b342-4314-b503-5e6a568db350";
 let currentStep = 0;
 let relevantBoats;
 let theBoat;
-let howManyLeft;
+let howManyLeft = 0;
 
 document.addEventListener("DOMContentLoaded", function () {
     //TODO delete
@@ -93,6 +93,33 @@ async function approveAfterStepTwo() {
     });
 }
 
+async function approveAfterStepThree() {
+    let newRowers = [];
+
+    newRowersSelectEl.childNodes.forEach(function (optionEl) {
+        newRowers.push(optionEl.value);
+    });
+
+    let data = JSON.stringify({
+        reqId: id,
+        boatSerialNumber: theBoat.serialNumber,
+        rowersReqIdList: JSON.stringify(newRowers)
+    });
+
+
+    await fetch("/rowing-activities/approveMergedRequest", {
+        method: 'post',
+        body: data,
+        headers: getPostHeaders()
+    }).then(async function (response) {
+        let resAsJson = await response.json();
+        if (!resAsJson.isSuccess) {
+            showError("Request couldn't be approved due to unknown problem");
+            close();
+        }
+    });
+}
+
 async function validateCurrentStep() {
     let result = false;
     if (currentStep === 0) {
@@ -112,18 +139,22 @@ async function validateCurrentStep() {
             });
         }
     } else if (currentStep === 1) {
-        result = validateStepOne(errorsLevelOneEl);
+        result = validateMiddleStep(errorsMiddleStepEl);
         if (result) {
             await approveAfterStepTwo();
         }
-    } else {
+    } else if (currentStep === 2) {
+        result = validateMiddleStep(errorsMiddleStepEl);
+        if (result) {
+            await approveAfterStepThree();
+        }
 
     }
 
     return result;
 }
 
-function validateStepOne(errors) {
+function validateMiddleStep(errors) {
     let result = false;
 
     if (howManyLeft === 0) {
@@ -131,7 +162,7 @@ function validateStepOne(errors) {
     } else {
         showErrorsInUnOrderedListEl(["Rowers count must be " + theBoat.maxNumberOfRowers], errors);
         setTimeout(function () {
-            errorsLevelOneEl.innerHTML = "";
+            errorsMiddleStepEl.innerHTML = "";
         }, timeOutTime);
     }
 
@@ -193,6 +224,14 @@ function selectFirstOption() {
     if (deletedRowersSelectEl[0] !== undefined) {
         deletedRowersSelectEl[0].selected = true;
     }
+
+    if (availableRowersSelectEl[0] !== undefined) {
+        availableRowersSelectEl[0].selected = true;
+    }
+
+    if (newRowersSelectEl[0] !== undefined) {
+        newRowersSelectEl[0].selected = true;
+    }
 }
 
 function handleTooManyRowers() {
@@ -220,14 +259,63 @@ function handleStageZero() {
 }
 
 function initRowersToAdd() {
-    getAvailableRowersToMerge(id, theBoat.serialNumber).then(function (rowersReqIdMap){
-        alert(JSON.stringify(rowersReqIdMap[0].rower));
+    availableRowersSelectEl.innerHTML = "";
+    newRowersSelectEl.innerHTML = "";
+    getAvailableRowersToMerge(id, theBoat.serialNumber).then(function (rowersReqIdList) {
+        rowersReqIdList.forEach(function (reqIdPair) {
+            let optionEl = buildRowerOptionEl(reqIdPair.rower);
+            optionEl.value = JSON.stringify({
+                rowerSerialNumber: reqIdPair.rower.serialNumber,
+                reqId: reqIdPair.reqId
+            });
+
+            availableRowersSelectEl.appendChild(optionEl);
+        });
     });
 }
 
+joinRowerToRequestBtn.addEventListener("click", function () {
+    if (howManyLeft > 0) {
+        let selectedItem = availableRowersSelectEl[availableRowersSelectEl.selectedIndex];
+        if (selectedItem !== undefined) {
+            newRowersSelectEl.appendChild(selectedItem);
+            selectFirstOption();
+            howManyLeft--;
+            changeHowManyToAdd();
+        }
+    }
+});
+
+moveRowerBackBtn.addEventListener("click", function () {
+    let selectedItem = newRowersSelectEl[newRowersSelectEl.selectedIndex];
+    if (selectedItem !== undefined) {
+        availableRowersSelectEl.appendChild(selectedItem);
+        selectFirstOption();
+        howManyLeft++;
+        changeHowManyToAdd();
+    }
+});
+
+function changeHowManyToAdd() {
+    howManyToAddTextEl.innerText = "YOU HAVE TO ADD " + howManyLeft + " MORE ROWERS";
+
+    if (howManyLeft === 0) {
+        joinRowerToRequestBtn.disabled = true;
+        joinRowerToRequestBtn.style.cursor = "not-allowed";
+        howManyToAddTextEl.style.color = "green";
+    } else {
+        joinRowerToRequestBtn.disabled = false;
+        joinRowerToRequestBtn.style.cursor = "default";
+        howManyToAddTextEl.style.color = "red";
+    }
+}
 
 function handleMergeOtherRequest() {
-    initRowersToAdd();
+    getRequestsFromServer(id).then(function (request) {
+        initRowersToAdd();
+        howManyLeft = theBoat.maxNumberOfRowers - (request.otherRowersList.length + 1);// '+1' because the main rower
+        changeHowManyToAdd();
+    });
 }
 
 function handleElementsByStep() {

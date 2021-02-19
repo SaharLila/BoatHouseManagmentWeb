@@ -94,12 +94,19 @@
 }
 
 @media only screen and (max-device-width: 576px) {
-
     #deleteFromRequestBtn img {
         transform: rotate(90deg);
     }
 
     #addToRequestBtn img {
+        transform: rotate(90deg);
+    }
+
+    #joinRowerToRequestBtn img {
+        transform: rotate(90deg);
+    }
+
+    #moveRowerBackBtn img {
         transform: rotate(90deg);
     }
 }

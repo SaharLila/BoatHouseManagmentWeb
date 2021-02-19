@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @WebServlet(urlPatterns = "/rowing-activities/approveOverflowRequest")
-public class ApproveOverflowRequest extends HttpServlet {
+public class ApproveOverflowRequestServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class RowersRequestPairsList {
-    List<RowersRequestPair> pairs = new ArrayList<>();
+    public List<RowersRequestPair> pairs = new ArrayList<>();
 
     public RowersRequestPairsList(Map<Rower, String> map) {
         map.forEach((key, value) -> pairs.add(new RowersRequestPair(new RowerJson(key), value)));
