@@ -1,1 +1,39 @@
-Rowing Activites Page
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="row card-header">
+                        <div class="col-md-3">
+                            <div class="form-group bmd-form-group">
+                                <label class="label-control">Filter</label>
+                                <select id="filter" name="filter"
+                                        class="form-control selectpicker"
+                                        data-style="btn btn-link">
+                                    <option selected value="all">All</option>
+                                    <option value="nextWeek">Next Week</option>
+                                    <option value="Previous Week">Previous Week</option>
+                                    <option>By Specific Date</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="display: none" id="specificDayFilterContainer" class="col-md-3">
+                            <div class="form-group bmd-form-group">
+                                <label class="label-control">By Day</label>
+                                <input style="margin-top:5px; text-align: left;" id="bySpecificDay" name="bySpecificDay"
+                                       type="text"
+                                       class="form-control datepicker2" autocomplete="off"/>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <!-- /.card-header -->
+                    <div class="card-body" id="tableContainer">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="application/javascript" src="/public/scripts/views/rowing-activity/index.js"></script>
+</div>

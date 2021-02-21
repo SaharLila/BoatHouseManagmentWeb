@@ -62,7 +62,7 @@ function getInfoHtml() {
         "                                    <div class=\"form-check pull-left\">\n" +
         "                                        <label style=\"margin-top: 20px; margin-left: 0px\" class=\"form-check-label\">\n" +
         "                                            <input id=\"isSeaBoat\" disabled class=\"form-check-input\" type=\"checkbox\"\n" +
-        "                                                   value=\"\">Is Sew Boat\n" +
+        "                                                   value=\"\">Is Sea Boat\n" +
         "                                            <span class=\"form-check-sign\"><span class=\"check\"></span></span>\n" +
         "                                        </label>\n" +
         "                                    </div>\n" +

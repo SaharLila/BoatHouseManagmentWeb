@@ -14,7 +14,8 @@ import java.io.IOException;
         "/rowers/*",
         "/boats/*",
         "/weekly-activities/*",
-        "/data/*"
+        "/data/*",
+        "/rowing-activities/*"
 })
 public class AdminFilter implements Filter {
     @Override

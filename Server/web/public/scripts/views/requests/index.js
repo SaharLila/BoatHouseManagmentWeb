@@ -20,14 +20,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-function specificDayFilter(req) {
-    if (bySpecificDayEl.val() !== "") {
-        return req.trainingDate === bySpecificDayEl.val();
-    } else {
-        return true;
-    }
-}
-
 function applySpecificDayFilter() {
     if (bySpecificDayEl.val() !== currentSpecificDay) {
         currentSpecificDay = bySpecificDayEl.val();
@@ -61,24 +53,6 @@ function onlyApprovedFilter(req) {
         return req.isApproved;
     }
     return true;
-}
-
-function reqIsPrevWeekFilter(req) {
-    let reqDate = getDateObjectFromString(req.trainingDate);
-    let lastWeek = new Date(Date.now());
-
-    minusDaysToDate(lastWeek, 7);
-
-    return reqDate <= Date.now() && reqDate >= lastWeek;
-}
-
-function reqIsNextWeekFilter(req) {
-    let reqDate = getDateObjectFromString(req.trainingDate);
-
-    let nextWeek = new Date(Date.now());
-    addDaysToDate(nextWeek, 7);
-
-    return reqDate >= Date.now() && reqDate <= nextWeek;
 }
 
 function getFilterFromSelectedIndex(selectedIndex) {
@@ -257,17 +231,7 @@ function onInfo(id) {
 function createInfoPage(request) {
     return import ("/public/scripts/views/requests/info.js").then((info) => {
         let infoEl = info.getInfoDiv();
-        let mainRowerEl = infoEl.querySelector("#mainRower");
-        let activityDateEl = infoEl.querySelector("#activityDate");
-        let weeklyActivityDetailsEl = infoEl.querySelector("#activityDetails");
-        let otherRowersEl = infoEl.querySelector("#otherRowers");
-        let boatTypesEl = infoEl.querySelector("#boatTypes");
-
-        mainRowerEl.value = getRowerStringFormat(request.mainRower);
-        activityDateEl.value = request.trainingDate;
-        weeklyActivityDetailsEl.value = getWeeklyActivityInfoString(request.weeklyActivity);
-        initOtherRowersList(request.otherRowersList, otherRowersEl);
-        initBoatTypes(request.boatTypesList, boatTypesEl);
+        initReqInfoDetails(request, infoEl);
 
         let duplicateBtn = infoEl.querySelector("#duplicateBtn");
         if (loggedInUser.isAdmin) {
@@ -276,21 +240,8 @@ function createInfoPage(request) {
             duplicateBtn.hidden = true;
         }
 
-
         return infoEl;
     });
-}
-
-function initBoatTypes(boatTypes, boatTypesEl) {
-    boatTypesEl.value = "";
-
-    if (boatTypes === undefined || boatTypes.length === 0) {
-        boatTypesEl.value = "There aren't any other rowers in this request.";
-    } else {
-        boatTypes.forEach(function (type) {
-            boatTypesEl.value += getBoatTypeFromNum(type) + "\n";
-        });
-    }
 }
 
 function handleUpdateClick(e, request) {
@@ -306,23 +257,4 @@ function handleUpdateClick(e, request) {
             window.location.reload();
         }, longTimeOutTime);
     }).catch(handleErrors);
-}
-
-function initOtherRowersList(otherRowers, otherRowersEl) {
-    otherRowersEl.value = "";
-
-    if (otherRowers === undefined || otherRowers.length === 0) {
-        otherRowersEl.value = "There aren't any other rowers in this request.";
-    } else {
-        otherRowers.forEach(function (rower) {
-            otherRowersEl.value += getRowerStringFormat(rower) + "\n";
-        });
-    }
-}
-
-function getWeeklyActivityInfoString(weeklyActivity) {
-    return "Name: " + weeklyActivity.name + "\n" +
-        "Start Time: " + weeklyActivity.startTime + "\n" +
-        "End Time: " + weeklyActivity.endTime + "\n" +
-        "Boat Type Description: " + weeklyActivity.boatTypeDescription + "\n";
 }

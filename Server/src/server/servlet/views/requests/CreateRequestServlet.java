@@ -3,6 +3,7 @@ package server.servlet.views.requests;
 import com.google.gson.Gson;
 import engine.api.EngineContext;
 import engine.model.activity.request.Request;
+import engine.model.activity.rowing.RowingActivity;
 import engine.model.activity.weekly.activity.WeeklyActivity;
 import engine.model.boat.Boat;
 import engine.model.rower.Rower;
@@ -22,6 +23,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 @WebServlet(urlPatterns = "/requests/create")
 public class CreateRequestServlet extends HttpServlet {
@@ -51,13 +53,9 @@ public class CreateRequestServlet extends HttpServlet {
             List<Rower> otherRowers = parseOtherRowers(reqData.get("otherRowers"), errors, weeklyActivity, activityDate);
             Rower creator = eng.getLoggedInUser(req.getRequestedSessionId());
 
-            //TODO delete
-            //            if (!eng.getRequestsCollectionManager().isRowerAvailableForActivity(mainRower, weeklyActivity, activityDate)) {
-            //                errors.add("The main rower you've selected already " +
-            //                        "participate in other club activities at this time frame");
-            //            }
-
             newRequest = new Request(mainRower, creator, weeklyActivity, activityDate, otherRowers, boatTypes);
+
+            checkForAutoApproveRequest(newRequest.getMainRower().getPrivateBoatsSerialNumbers(), eng, newRequest);
 
         } catch (Exception ex) {
             errors.add("Couldn't create the request due to an unknown error.");
@@ -68,6 +66,17 @@ public class CreateRequestServlet extends HttpServlet {
                 out.println(Utils.createJsonSuccessObject(eng.getRequestsCollectionManager().add(newRequest)));
             } else {
                 out.println(Utils.createJsonErrorsListObject(errors));
+            }
+        }
+    }
+
+    private void checkForAutoApproveRequest(Set<String> mainRowerBoatsSerialNumbers, EngineContext eng, Request request) {
+        for (String serial : mainRowerBoatsSerialNumbers) {
+            Boat boat = eng.getBoatsCollectionManager().findBySerialNumber(serial);
+
+            if (request.getBoatTypesList().contains(boat.getBoatType())) {
+                eng.getRowingActivitiesCollectionManager().add(new RowingActivity(boat, request));
+                break;
             }
         }
     }
