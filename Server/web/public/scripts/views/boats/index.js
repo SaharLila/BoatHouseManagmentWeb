@@ -30,8 +30,9 @@ async function createTable() {
                 boats.forEach((boat) => {
                     let boatTableRow = buildBoatTableRow(boat);
                     table.querySelector("#tableBody")
-                        .appendChild(tables.getRowInTable(boat.serialNumber, boatTableRow, i++, onDelete, onEdit, onInfo));
+                        .appendChild(tables.buildTableRow(boat.serialNumber, boatTableRow, i++, onDelete, onEdit, onInfo));
                 });
+                tables.applyDataTable();
             } else {
                 tableContainer.appendChild(tables.getNoDataEl());
             }

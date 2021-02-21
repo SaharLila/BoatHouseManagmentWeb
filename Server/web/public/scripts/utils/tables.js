@@ -1,4 +1,11 @@
-export function getRowInTable(id, rowElements, rowNumber, onDelete, onUpdate, onEdit) {
+export function applyDataTable() {
+    $(".dataTable").DataTable({
+        "lengthChange": false,
+        "autoWidth": true,
+    });
+}
+
+export function buildTableRow(id, rowElements, rowNumber, onDelete, onUpdate, onEdit) {
     let tr = document.createElement("tr");
     let th = document.createElement("th");
     th.scope = "row";
@@ -22,10 +29,14 @@ export function getRowInTable(id, rowElements, rowNumber, onDelete, onUpdate, on
 export function createEmptyTable(colNames) {
     let res = document.createElement("div");
     let table = document.createElement("table");
-    res.className += "table-responsive-sm";
+    res.classList.add("table-responsive-sm");
     res.appendChild(table);
-    table.className += "table-striped dataTable";
-    table.style.width = "100%";
+
+    table.classList.add("table-striped");
+    table.classList.add("table");
+    // table.classList.add("table-responsive");
+    table.classList.add("dataTable");
+    table.style.maxWidth = "100%";
 
 //build the head
     let head = document.createElement("thead");
@@ -33,7 +44,7 @@ export function createEmptyTable(colNames) {
     tr.id = "tableHead"
     let indexCol = document.createElement("th");
     indexCol.scope = "col";
-    indexCol.innerText = "#"
+    indexCol.innerText = ""
     indexCol.style.fontWeight = "bold";
     indexCol.style.textAlign = "center";
     indexCol.style.width = "5px";
@@ -45,6 +56,7 @@ export function createEmptyTable(colNames) {
         th.innerText = name;
         th.style.fontWeight = "bold";
         th.style.textAlign = "center";
+        th.style.width = "auto";
         tr.appendChild(th);
     });
 

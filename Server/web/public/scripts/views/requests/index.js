@@ -168,11 +168,12 @@ async function createTable(timeFilterToInvoke, isApprovedFilterToInvoke) {
                 let i = 1;
                 requestsList.forEach((req) => {
                     let requestsTableRow = buildRequestTableRow(req);
-                    let reqRow = tables.getRowInTable(req.id, requestsTableRow, i++, onDelete, onEdit, onInfo)
+                    let reqRow = tables.buildTableRow(req.id, requestsTableRow, i++, onDelete, onEdit, onInfo)
                     table.querySelector("#tableBody")
                         .appendChild(reqRow);
 
                 });
+                tables.applyDataTable();
             } else {
                 tableContainer.appendChild(tables.getNoDataEl());
             }

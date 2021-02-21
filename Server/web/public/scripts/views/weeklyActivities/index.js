@@ -29,8 +29,9 @@ function createTable() {
                 activities.forEach(activity => {
                     let activityTableTow = buildActivityRow(activity);
                     table.querySelector("#tableBody")
-                        .appendChild(tables.getRowInTable(activity.id, activityTableTow, i++, onDelete, onEdit, onInfo));
-                })
+                        .appendChild(tables.buildTableRow(activity.id, activityTableTow, i++, onDelete, onEdit, onInfo));
+                });
+                tables.applyDataTable();
             } else {
                 tableContainer.appendChild(tables.getNoDataEl());
             }

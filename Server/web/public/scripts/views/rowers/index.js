@@ -29,8 +29,9 @@ async function createTable() {
                 rowers.forEach((rower) => {
                     let tableElements = buildRowerTableElements(rower);
                     table.querySelector("#tableBody")
-                        .appendChild(tables.getRowInTable(rower.serialNumber, tableElements, i++, onDelete, onEdit, onInfo));
-                })
+                        .appendChild(tables.buildTableRow(rower.serialNumber, tableElements, i++, onDelete, onEdit, onInfo));
+                });
+                tables.applyDataTable();
             } else {
                 tableContainer.appendChild(tables.getNoDataEl());
             }

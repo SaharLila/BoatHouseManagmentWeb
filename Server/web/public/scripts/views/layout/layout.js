@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
     getNavMenuItems();
     setCurrentYear();
 
+
     $('.datepicker2').datepicker({
         uiLibrary: 'bootstrap4',
         format: 'dd/mm/yyyy'
