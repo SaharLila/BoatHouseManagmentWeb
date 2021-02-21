@@ -1,25 +1,14 @@
-
-.dataTables_wrapper .dataTables_paginate .paginate_button {
-    padding: 0px;
-    display: inline;
-    margin: 5px;
+.page-item.active .page-link {
+    background-color: lightgrey !important;
+    border: 1px solid black;
 }
 
-.paginate_button > a {
-    color: black;
+.page-link {
+    color: black !important;
 }
 
-.dataTables_wrapper .dataTables_paginate .paginate_button {
-    display: inline;
-    margin: 5px;
-    color: black;
-}
-
-li.paginate_button.page-item.active > a {
-    z-index: -1;
-    color: #000000;
-    background-color: #e3dfdf;
-    /* border-color: #2196f3; */
+.paginate_button:hover {
+    color: transparent;
 }
 
 th {

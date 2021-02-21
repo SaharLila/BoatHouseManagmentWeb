@@ -8,12 +8,12 @@ let scrollBarY;
 // init chat
 
 document.addEventListener('DOMContentLoaded', function () {
-    chatHtml = document.createElement('html');
-    chatHtml.innerHTML = html;
-    chatEl.appendChild(chatHtml);
-    getElements();
-    initChatStyle();
-    initEventListeners();
+    // chatHtml = document.createElement('html');
+    // chatHtml.innerHTML = html;
+    // chatEl.appendChild(chatHtml);
+    // getElements();
+    // initChatStyle();
+    // initEventListeners();
 })
 
 function getElements() {
