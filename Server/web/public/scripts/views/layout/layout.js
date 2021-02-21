@@ -1,6 +1,7 @@
 const menuItemsListEl = document.getElementById("mainMenu")
 const currentYearElements = document.getElementsByClassName("currentYear");
 const titleEl = document.getElementById("title");
+const notifications
 
 document.addEventListener("DOMContentLoaded", function () {
     getNavMenuItems();
@@ -73,4 +74,11 @@ function initDateTmePicker() {
 
         format: 'LT',
     });
+}
+
+
+// Notifications
+
+function toggleNotifications(){
+
 }
