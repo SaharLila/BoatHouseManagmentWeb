@@ -7,8 +7,8 @@
     color: black !important;
 }
 
-.paginate_button:hover {
-    color: transparent;
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background-color: transparent !important;
 }
 
 th {
