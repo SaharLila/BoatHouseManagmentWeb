@@ -1,14 +1,33 @@
 .page-item.active .page-link {
     background-color: lightgrey !important;
-    border: 1px solid black;
+    border: hidden;
+}
+
+.page-item .page-link {
+    background-color: lightgrey !important;
+    border: hidden;
 }
 
 .page-link {
     color: black !important;
 }
 
-.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-    background-color: transparent !important;
+#DataTables_Table_0_paginate > ul > li:hover {
+    margin-right: 5px;
+    margin-left: 5px;
+    padding: 0;
+    border: hidden;
+}
+
+#DataTables_Table_0_paginate > ul > li {
+    margin-right: 5px;
+    margin-left: 5px;
+    padding: 0;
+    border: hidden;
+}
+
+.dataTables_paginate {
+    margin-top: 10px;
 }
 
 th {
