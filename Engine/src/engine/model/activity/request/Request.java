@@ -151,8 +151,9 @@ public class Request extends Model implements Serializable {
 
     public Request clone() {
         try {
+            List<Boat.eBoatType> newBoatTypeList = new ArrayList<>(this.boatTypesList);
             return new Request(this.mainRower, this.requestCreator, this.weeklyActivity.cloneWeeklyActivity(),
-                    this.trainingDate, this.otherRowersList, this.boatTypesList);
+                    this.trainingDate, this.otherRowersList, newBoatTypeList);
         } catch (Exception e) {
             return null;
         }

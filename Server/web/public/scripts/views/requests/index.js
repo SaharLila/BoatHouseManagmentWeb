@@ -83,8 +83,17 @@ function buildRequestTableRow(req) {
     return res;
 }
 
+function createApprovePage(request) {
+    return import ("/public/scripts/views/requests/approve.js").then((info) => {
+        return info.getApproveDiv(request.id);
+    });
+}
+
 function approveBtnClickEventHandler(id) {
-    alert("approve " + id);
+    const request = requestsList.filter(req => req.id === id)[0];
+    createApprovePage(request).then(infoPageEl => {
+        showApproveRequestPopup(infoPageEl);
+    });
 }
 
 function getApproveBtn(req) {
@@ -257,4 +266,20 @@ function handleUpdateClick(e, request) {
             window.location.reload();
         }, longTimeOutTime);
     }).catch(handleErrors);
+}
+
+function showApproveRequestPopup(divToInject) {
+    Swal.fire({
+        html: divToInject,
+        showConfirmButton: false,
+        showCancelButton: false,
+        focusConfirm: false,
+        padding: "0px",
+        width: "85%",
+        allowOutsideClick: false
+    });
+
+    import ("/public/scripts/views/rowing-activity/approve.js").then(approve => {
+        approve.startToApprove();
+    });
 }

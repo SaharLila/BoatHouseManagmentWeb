@@ -12,7 +12,7 @@ const errorsEl = document.getElementById("errors");
 
 document.addEventListener("DOMContentLoaded", function () {
     initMainRower();
-    initBoatTypes();
+    initBoatTypesUtils();
     initOtherRowers();
     $("#boatTypes").on("change", boatTypeChangedEventHandler);
     $("#otherRowers").on("change", otherRowersChangedEventHandler);
@@ -99,7 +99,7 @@ function checkOverloadRowers() {
     }
 }
 
-function initBoatTypes() {
+function initBoatTypesUtils() {
     getSimilarTypesFromServer().then(function (response) {
         if (response.types !== undefined && response.types.length > 0) {
             response.types.forEach(function (type) {

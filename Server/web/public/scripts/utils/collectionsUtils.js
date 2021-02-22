@@ -256,6 +256,15 @@ function initReqInfoDetails(request, infoEl){
     initBoatTypes(request.boatTypesList, boatTypesEl);
 }
 
+function initBoatInfo(boat, infoEl) {
+    let boatDetailsEl = infoEl.querySelector("#boatDetails");
+
+    boatDetailsEl.value = "Boat name: " + boat.name + "\n";
+    boatDetailsEl.value += "Type description: " + boat.description + "\n";
+    boatDetailsEl.value += "Is sea boat ? " + (boat.isSeaBoat ? "Yes" : "No") + "\n";
+    boatDetailsEl.value += "Is Wide boat ? " + (boat.isWide ? "Yes" : "No") + "\n";
+}
+
 function getWeeklyActivityInfoString(weeklyActivity) {
     return "Name: " + weeklyActivity.name + "\n" +
         "Start Time: " + weeklyActivity.startTime + "\n" +

@@ -142,15 +142,6 @@ function onEdit() {
     // no implement needed
 }
 
-function initBoatInfo(boat, infoEl) {
-    let boatDetailsEl = infoEl.querySelector("#boatDetails");
-
-    boatDetailsEl.value = "Boat name: " + boat.name + "\n";
-    boatDetailsEl.value += "Type description: " + boat.description + "\n";
-    boatDetailsEl.value += "Is sea boat ? " + (boat.isSeaBoat ? "Yes" : "No") + "\n";
-    boatDetailsEl.value += "Is Wide boat ? " + (boat.isWide ? "Yes" : "No") + "\n";
-}
-
 function onInfo(id) {
     const activity = activitiesList.filter(activity => activity.id === id)[0];
     createInfoPage(activity).then(infoPageEl => {

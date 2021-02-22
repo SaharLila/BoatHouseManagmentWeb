@@ -8,6 +8,7 @@ import engine.model.activity.rowing.RowingActivity;
 import engine.model.boat.Boat;
 import engine.model.rower.Rower;
 import server.servlet.json.template.model.request.RowerIdReqIdPair;
+import server.servlet.json.template.model.rowing.activity.RowingActivityJson;
 import server.utils.Utils;
 
 import javax.servlet.ServletException;
@@ -47,8 +48,12 @@ public class ApproveMergedRequestServlet extends HttpServlet {
                 rowersRequestPairsList
                         .forEach(rowersRequestPair -> handleRowerReqIdPair(rowersRequestPair, eng, reqToApproveModifier));
 
-                out.println(Utils.createJsonSuccessObject(eng.getRowingActivitiesCollectionManager()
-                        .add(new RowingActivity(theBoat, requestToApprove))));
+                RowingActivity rowingActivityToAdd = new RowingActivity(theBoat, requestToApprove);
+                if(eng.getRowingActivitiesCollectionManager().add(rowingActivityToAdd)){
+                    out.println(Utils.createJsonSuccessObject(new RowingActivityJson(rowingActivityToAdd)));
+                }else {
+                    out.println(Utils.createJsonErrorObject(null));
+                }
 
             } catch (Exception e) {
                 out.println(Utils.createJsonErrorObject(null));
