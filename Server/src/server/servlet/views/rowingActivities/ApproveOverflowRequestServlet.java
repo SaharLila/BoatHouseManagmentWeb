@@ -8,6 +8,7 @@ import engine.model.activity.rowing.RowingActivity;
 import engine.model.boat.Boat;
 import engine.model.rower.Rower;
 import server.servlet.json.template.model.rower.RowerJson;
+import server.servlet.json.template.model.rowing.activity.RowingActivityJson;
 import server.utils.Utils;
 
 import javax.servlet.ServletException;
@@ -50,11 +51,14 @@ public class ApproveOverflowRequestServlet extends HttpServlet {
 
                 RowingActivity rowingActivity = new RowingActivity(theBoat, requestToApprove);
 
-                List<Boolean> res = new ArrayList<>();
-                res.add(eng.getRowingActivitiesCollectionManager().add(rowingActivity));
-                res.add(eng.getRequestsCollectionManager().add(ClonedRequest));
+                boolean addRowingActivitySucceed = eng.getRowingActivitiesCollectionManager().add(rowingActivity);
+                eng.getRequestsCollectionManager().add(ClonedRequest);
 
-                out.println(Utils.createJsonSuccessObject(res));
+                if (addRowingActivitySucceed) {
+                    out.println(Utils.createJsonSuccessObject(new RowingActivityJson(rowingActivity)));
+                } else {
+                    out.println(Utils.createJsonErrorObject(null));
+                }
             } catch (Exception e) {
                 out.println(Utils.createJsonErrorObject(null));
             }

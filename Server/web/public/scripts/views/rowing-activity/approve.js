@@ -26,19 +26,18 @@ const joinRowerToRequestBtn = document.getElementById("joinRowerToRequestBtn");
 const moveRowerBackBtn = document.getElementById("moveRowerBackBtn");
 const howManyToAddTextEl = document.getElementById("howManyToAddText");
 
-// let id = document.getElementById("requestId").value;
-// let id = "d7b6e285-b342-4314-b503-5e6a568db350";
-let id = "d9b280fe-4d87-4981-8bf0-0fb81c71f208" // Yotam's
+let id = document.getElementById("requestId").value;
+
 let currentStep = 0;
-let relevantBoats;
+let boatsList;
 let theBoat;
 let howManyLeft = 0;
+let rowingActivity;
 
-document.addEventListener("DOMContentLoaded", function () {
-    //TODO delete
+export function startToApprove() {
+    alert(id);
     handleElementsByStep();
-})
-
+}
 
 // Tabs functionality
 nextStepBtn.addEventListener('click', function () {
@@ -87,7 +86,9 @@ async function approveAfterStepTwo() {
         headers: getPostHeaders()
     }).then(async function (response) {
         let resAsJson = await response.json();
-        if (!resAsJson.isSuccess) {
+        if (resAsJson.isSuccess) {
+            rowingActivity = resAsJson.data;
+        } else {
             showError("Request couldn't be approved due to unknown problem");
             close();
         }
@@ -114,7 +115,9 @@ async function approveAfterStepThree() {
         headers: getPostHeaders()
     }).then(async function (response) {
         let resAsJson = await response.json();
-        if (!resAsJson.isSuccess) {
+        if (resAsJson.isSuccess) {
+            rowingActivity = resAsJson.data;
+        } else {
             showError("Request couldn't be approved due to unknown problem");
             close();
         }
@@ -171,8 +174,7 @@ function validateMiddleStep(errors) {
 }
 
 function close() {
-    alert("exit function")
-    //TODO
+    location.reload();
 }
 
 function initSelectList(rowers) {
@@ -264,7 +266,7 @@ function initRowersToAdd() {
     newRowersSelectEl.innerHTML = "";
     getAvailableRowersToMerge(id, theBoat.serialNumber).then(function (rowersReqIdList) {
         if (howManyLeft > rowersReqIdList.length) {
-            showError("We couldn't find enough rowers that can join this request.")
+            showError("You don't have enough rowers in your request and we couldn't find enough rowers that can join this request.")
             close();
         } else {
             rowersReqIdList.forEach(function (reqIdPair) {
@@ -324,6 +326,23 @@ function handleMergeOtherRequest() {
     });
 }
 
+function showApprovedRequestInfo() {
+    createInfoPage(rowingActivity).then(infoEl => {
+        infoTab.appendChild(infoEl);
+    });
+}
+
+
+function createInfoPage(activity) {
+    return import ("/public/scripts/views/rowing-activity/info.js").then((info) => {
+        let infoEl = info.getInfoDiv();
+        initReqInfoDetails(activity.request, infoEl);
+        initBoatInfo(activity.boat, infoEl);
+
+        return infoEl;
+    });
+}
+
 function handleElementsByStep() {
     errors.innerHTML = "";
 
@@ -334,10 +353,9 @@ function handleElementsByStep() {
     } else if (currentStep === 2) {
         handleMergeOtherRequest();
     } else if (currentStep === 3) {
-        // finish
-
+        showApprovedRequestInfo();
     } else {
-
+        handleErrors();
     }
 
     changeTabs();
@@ -345,12 +363,13 @@ function handleElementsByStep() {
 
 function findMiddleStep() {
     checkRowersCountStatus().then(function (result) {
-        if (result === 0) {
-            currentStep = 3;
-        } else if (result > 0) {
+        if (result > 0) {
             currentStep = 1;
-        } else {
+        } else if (result < 0) {
             currentStep = 2;
+        } else {
+            rowingActivity = result;
+            currentStep = 3;
         }
 
         handleElementsByStep();
@@ -439,7 +458,11 @@ function changeTabs() {
         backStepBtn.remove();
         nextStepBtn.disabled = false;
         nextStepBtn.style.cursor = "default"
-        nextStepBtn.innerText = "close";
+        nextStepBtn.innerText = "Finish";
+
+        let btnClone = nextStepBtn.cloneNode(true);
+        nextStepBtn.parentNode.replaceChild(btnClone, nextStepBtn);
+        btnClone.addEventListener("click", close);
         progressBar.style.width = "100%";
     }
 }

@@ -2,7 +2,9 @@ package server.servlet.views.requests;
 
 import engine.api.EngineContext;
 import engine.model.activity.request.Request;
+import engine.model.activity.rowing.RowingActivity;
 import engine.model.boat.Boat;
+import server.servlet.json.template.model.rowing.activity.RowingActivityJson;
 import server.utils.Utils;
 
 import javax.servlet.ServletException;
@@ -28,8 +30,10 @@ public class FindRowersCountStatusServlet extends HttpServlet {
             Request requestToCheck = eng.getRequestsCollectionManager()
                     .filter(request -> request.getId().equals(reqId)).get(0);
 
-            Boat.eBoatType boatType = eng.getBoatsCollectionManager()
-                    .filter(boat -> boat.getSerialNumber().equals(boatId)).get(0).getBoatType();
+            Boat theBoat = eng.getBoatsCollectionManager()
+                    .filter(boat -> boat.getSerialNumber().equals(boatId)).get(0);
+
+            Boat.eBoatType boatType = theBoat.getBoatType();
 
             if (requestToCheck != null && boatType != null) {
                 int result = 0;
@@ -39,7 +43,15 @@ public class FindRowersCountStatusServlet extends HttpServlet {
                 } else if (requestToCheck.getTotalCountOfRowers() < boatType.getNumOfRowers()) {
                     result = -1;
                 }
-                out.println(Utils.createJsonSuccessObject(result));
+
+                if (result != 0) {
+                    out.println(Utils.createJsonSuccessObject(result));
+                } else {
+                    // we can approve the request
+                    RowingActivity rowingActivity = new RowingActivity(theBoat, requestToCheck);
+                    eng.getRowingActivitiesCollectionManager().add(rowingActivity);
+                    out.println(Utils.createJsonSuccessObject(new RowingActivityJson(rowingActivity)));
+                }
 
             } else {
                 out.println(Utils.createJsonErrorObject("Unknown error occurred during approving the request."));
