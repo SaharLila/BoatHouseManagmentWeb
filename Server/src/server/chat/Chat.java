@@ -63,28 +63,18 @@ public class Chat {
     }
 
     public List<Message> getRelevantMessages(Integer version) {
-        List<Message> res;
-        if (version == null) {
-            res = getAllMessages();
-        } else {
-            List<Pair<Integer, Message>> tempList = this.messages.stream()
-                    .filter(pair -> pair.getKey().equals(version)).collect(Collectors.toList());
-            if (tempList.isEmpty()) {
-                res = getAllMessages();
-            } else {
-                List<Message> result = new ArrayList<>();
-                boolean found = false;
-                for (Pair<Integer, Message> message : this.messages) {
-                    if (!message.getKey().equals(version) && !found) {
-                    } else {
-                        found = true;
-                        result.add(message.getValue());
-                    }
-                }
-                res = result;
-            }
-        }
 
-        return res;
+        Pair<Integer, Message> pair = this.messages.stream()
+                .filter(messages -> messages.getKey().equals(version))
+                .findFirst().orElse(null);
+
+        int index = pair != null ? this.messages.indexOf(pair) : 0;
+
+        return this.messages.subList(index, this.messages.size() - 1).stream()
+                .map(Pair::getValue).collect(Collectors.toList());
+    }
+
+    public int getTotalCount() {
+        return this.messages.size();
     }
 }

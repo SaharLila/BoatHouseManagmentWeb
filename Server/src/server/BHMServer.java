@@ -1,6 +1,7 @@
 package server;
 
 import engine.api.EngineContext;
+import server.chat.Chat;
 import server.constant.Constants;
 
 import javax.servlet.ServletContextEvent;
@@ -25,6 +26,7 @@ public class BHMServer implements ServletContextListener, HttpSessionListener {
 
         servletContextEvent.getServletContext().setAttribute(Constants.engineAtt, EngineContext.getInstance());
         servletContextEvent.getServletContext().setAttribute(Constants.sessionExpMap, new HashMap<String, LocalDateTime>());
+        servletContextEvent.getServletContext().setAttribute(Constants.chatAtt, new Chat());
         log("server is up");
     }
 

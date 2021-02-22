@@ -11,8 +11,9 @@ function showError(message, title) {
         title = "Error!";
     }
 
-    Swal.fire(title, message, "error")
+    Swal.fire(title, message, "error");
 }
+
 
 function showInfoPopup(divToInject) {
     Swal.fire({

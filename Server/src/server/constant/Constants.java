@@ -9,6 +9,7 @@ public class Constants {
     private static final int sessionDuration = 7;
     public static String sessionExpMap = "SESSION_EXPIRED_MAP";
     public static String currentActivePagAttr = "CURRENT_PAGE";
+    public static String chatAtt = "GET_CHAT";
 
     public static LocalDateTime getNewSessionExpiredDate() {
         return LocalDateTime.now().plusDays(sessionDuration);

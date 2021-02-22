@@ -11,6 +11,7 @@ let chatVersion;
 
 // init chat
 
+
 document.addEventListener('DOMContentLoaded', function () {
     // chatHtml = document.createElement('html');
     // chatHtml.innerHTML = html;
@@ -18,7 +19,22 @@ document.addEventListener('DOMContentLoaded', function () {
     // getElements();
     // initChatStyle();
     // initEventListeners();
+    // updateVersion();
+    // startChat();
 })
+
+function startChat() {
+    refreshVersionInterval();
+    refreshMessagesInterval();
+}
+
+async function refreshVersionInterval() {
+    setInterval(updateVersion, timeOutTime);
+}
+
+async function refreshMessagesInterval() {
+    setInterval(receiveMessages, timeOutTime);
+}
 
 function getElements() {
     closeButton = document.getElementById('closeChat');
@@ -60,7 +76,6 @@ function clickSendEventHandler() {
         sendMessageToServer(chatInput.value);
         chatInput.value = "";
         chatInput.focus();
-        sendChatMessage()
     }
 }
 
@@ -126,21 +141,66 @@ function createSelfMessage(text) {
 }
 
 function sendMessageToServer(text) {
-    // TODO
+    let data = JSON.stringify({
+        message: text
+    });
+
+    fetch('/chat/send', {
+        method: 'post',
+        body: data,
+        headers: getPostHeaders()
+    }).then(async function (response) {
+        let json = await response.json()
+        if (!json.isSuccess) {
+            showError("Couldn't send the message due to an unknown error");
+        }
+    });
 }
 
 function receiveMessages() {
-    //TODO
+    if (chatVersion !== undefined) {
+        let data = JSON.stringify({
+            version: chatVersion.version
+        });
+
+        fetch('/chat/receive', {
+            method: 'post',
+            body: data,
+            headers: getPostHeaders()
+        }).then(async function (response) {
+            let json = await response.json()
+            if (json.isSuccess) {
+                json.data.forEach(function (msg) {
+                    if (msg.isMine) {
+                        createSelfMessage(msg.content);
+                    } else {
+                        createMessage(msg.content, msg.creator.name);
+                    }
+                });
+            } else {
+                showError("Couldn't get chat messages due to an unknown error");
+            }
+        });
+    }
 }
 
-function getCurrentVersion() {
-    //TODO
+function getAndUpdateCurrentVersion() {
+    fetch('/chat/receive', {
+        method: 'get',
+    }).then(async function (response) {
+        let json = await response.json()
+        if (json.isSuccess) {
+            chatVersion = json.data;
+        } else {
+            console.log("Error getting chat version")
+        }
+    });
 }
 
 function updateVersion() {
     let old = chatVersion;
     let count = 0;
-    chatVersion = getCurrentVersion();
+    getAndUpdateCurrentVersion();
 
     if (old !== undefined) {
         count = chatVersion.count - old.count;
