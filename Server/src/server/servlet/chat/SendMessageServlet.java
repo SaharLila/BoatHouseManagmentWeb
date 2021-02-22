@@ -27,7 +27,7 @@ public class SendMessageServlet extends HttpServlet {
                 .getLoggedInUser(req.getRequestedSessionId()));
 
         try (PrintWriter out = resp.getWriter()) {
-            out.println(Utils.createJsonSuccessObject(null));
+            out.println(Utils.createJsonSuccessObject(chat.getTotalCount()));
         }
     }
 }

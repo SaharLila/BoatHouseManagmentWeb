@@ -1,39 +1,35 @@
 const chatEl = document.getElementById('chat');
 const chatButton = document.getElementById('chatImgContainer');
 const chatCount = document.getElementById('chatCount');
+const refreshRateOpen = timeOutTime;
+const refreshRateClose = 30 * 1000;
+let refreshRate = refreshRateClose;
 let closeButton;
 let chatMessagesDiv;
 let chatHtml;
 let scrollBarY;
 let chatInput;
 let sendIcon;
-let chatVersion;
+let chatVersion = 0;
+let isChatOpen;
+let interval;
 
 // init chat
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    // chatHtml = document.createElement('html');
-    // chatHtml.innerHTML = html;
-    // chatEl.appendChild(chatHtml);
-    // getElements();
-    // initChatStyle();
-    // initEventListeners();
-    // updateVersion();
-    // startChat();
+    chatHtml = document.createElement('html');
+    chatHtml.innerHTML = html;
+    chatEl.appendChild(chatHtml);
+    getElements();
+    initChatStyle();
+    initEventListeners();
+    getAndUpdateCurrentVersion();
+    refreshMessagesInterval();
 })
 
-function startChat() {
-    refreshVersionInterval();
-    refreshMessagesInterval();
-}
-
-async function refreshVersionInterval() {
-    setInterval(updateVersion, timeOutTime);
-}
-
 async function refreshMessagesInterval() {
-    setInterval(receiveMessages, timeOutTime);
+    setInterval(receiveMessages, refreshRateClose);
 }
 
 function getElements() {
@@ -59,6 +55,9 @@ function initEventListeners() {
     chatInput.addEventListener('keyup', (e) => enterSendEventHandler(e));
     sendIcon.addEventListener('click', (e) => clickSendEventHandler(e));
     chatInput.addEventListener('mouseenter', () => chatInput.focus())
+    document.querySelector('.content').addEventListener('click', closeChat);
+    document.querySelector('.sidebar').addEventListener('click', closeChat);
+    document.querySelector('.navbar').addEventListener('click', closeChat);
 }
 
 function enterSendEventHandler(e) {
@@ -82,8 +81,22 @@ function clickSendEventHandler() {
 function toggleChat() {
     if (chatEl.style.display === "block") {
         chatEl.style.display = "none";
+        isChatOpen = false;
+        clearInterval(interval);
     } else {
+        receiveMessages();
         chatEl.style.display = "block";
+        isChatOpen = true;
+        chatCount.innerText = "0";
+        interval = setInterval(receiveMessages, refreshRateOpen);
+    }
+}
+
+function closeChat() {
+    if (chatEl.style.display === "block") {
+        chatEl.style.display = "none";
+        isChatOpen = false;
+        clearInterval(interval);
     }
 }
 
@@ -140,6 +153,8 @@ function createSelfMessage(text) {
     div.scrollIntoView()
 }
 
+
+// Server will return the new char version AFTER sending the message.
 function sendMessageToServer(text) {
     let data = JSON.stringify({
         message: text
@@ -151,36 +166,46 @@ function sendMessageToServer(text) {
         headers: getPostHeaders()
     }).then(async function (response) {
         let json = await response.json()
-        if (!json.isSuccess) {
+        if (json.isSuccess) {
+            chatVersion = json.data;
+        } else {
             showError("Couldn't send the message due to an unknown error");
         }
     });
 }
 
+// Receive any chat message that been created after the current chat version.
 function receiveMessages() {
-    if (chatVersion !== undefined) {
-        let data = JSON.stringify({
-            version: chatVersion.version
-        });
+    let data = JSON.stringify({
+        version: chatVersion.toString()
+    });
 
-        fetch('/chat/receive', {
-            method: 'post',
-            body: data,
-            headers: getPostHeaders()
-        }).then(async function (response) {
-            let json = await response.json()
-            if (json.isSuccess) {
-                json.data.forEach(function (msg) {
-                    if (msg.isMine) {
-                        createSelfMessage(msg.content);
-                    } else {
-                        createMessage(msg.content, msg.creator.name);
-                    }
-                });
-            } else {
-                showError("Couldn't get chat messages due to an unknown error");
-            }
-        });
+    fetch('/chat/receive', {
+        method: 'post',
+        body: data,
+        headers: getPostHeaders()
+    }).then(async function (response) {
+        let json = await response.json();
+        if (json.isSuccess) {
+            json.data.messages.forEach(function (msg) {
+                if (msg.isMine) {
+                    createSelfMessage(msg.content);
+                } else {
+                    createMessage(msg.content, msg.creator);
+                }
+                handleLabelCount();
+                chatVersion = json.data.version;
+            });
+        } else {
+            showError("Couldn't get chat messages due to an unknown error");
+        }
+    });
+}
+
+function handleLabelCount() {
+    if (!isChatOpen) {
+        let count = parseInt(chatCount.innerText);
+        chatCount.innerText = (count + 1).toString();
     }
 }
 
@@ -197,13 +222,3 @@ function getAndUpdateCurrentVersion() {
     });
 }
 
-function updateVersion() {
-    let old = chatVersion;
-    let count = 0;
-    getAndUpdateCurrentVersion();
-
-    if (old !== undefined) {
-        count = chatVersion.count - old.count;
-    }
-    chatCount.innerText = count.toString();
-}

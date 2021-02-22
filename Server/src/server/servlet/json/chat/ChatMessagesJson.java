@@ -4,9 +4,11 @@ import java.util.List;
 
 public class ChatMessagesJson {
 
-    List<MessageJson> messages;
+    public final List<MessageJson> messages;
+    public final int version;
 
-    public ChatMessagesJson(List<MessageJson> messages) {
+    public ChatMessagesJson(List<MessageJson> messages, int version) {
         this.messages = messages;
+        this.version = version;
     }
 }

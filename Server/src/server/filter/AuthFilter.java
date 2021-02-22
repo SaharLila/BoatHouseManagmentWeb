@@ -19,7 +19,8 @@ import java.io.IOException;
         "/requests/*",
         "/data/*",
         "/rowing-activities/*",
-        "/personal-details"
+        "/personal-details",
+        "/chat/*"
 })
 public class AuthFilter implements Filter {
 

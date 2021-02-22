@@ -6,7 +6,6 @@ import server.chat.Message;
 import server.constant.Constants;
 import server.servlet.json.chat.ChatMessagesJson;
 import server.servlet.json.chat.MessageJson;
-import server.servlet.json.chat.VersionJson;
 import server.utils.Utils;
 
 import javax.servlet.ServletException;
@@ -29,8 +28,7 @@ public class GetMessagesServlet extends HttpServlet {
 
         try (PrintWriter out = resp.getWriter()) {
             if (chat != null) {
-                VersionJson result = new VersionJson(chat.getVersion(), chat.getTotalCount());
-                out.println(Utils.createJsonSuccessObject(result));
+                out.println(Utils.createJsonSuccessObject(chat.getTotalCount()));
             } else {
                 out.println(Utils.createJsonErrorObject(null));
             }
@@ -41,21 +39,20 @@ public class GetMessagesServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Chat chat = (Chat) req.getServletContext().getAttribute(Constants.chatAtt);
         HashMap<String, String> reqArgs = Utils.parsePostData(req);
-        String clientChatVersion = reqArgs.get("version");
         String mySerial = EngineContext.getInstance().getLoggedInUser(req.getRequestedSessionId()).getSerialNumber();
 
         try (PrintWriter out = resp.getWriter()) {
-            if (chat != null && clientChatVersion != null) {
+            int clientChatVersion = Integer.parseInt(reqArgs.get("version"));
 
-                Integer version = Integer.parseInt(clientChatVersion);
-                List<Message> messageList = chat.getRelevantMessages(version);
+            if (chat != null) {
+                List<Message> messageList = chat.getRelevantMessages(clientChatVersion);
                 List<MessageJson> result = messageList.stream().map(MessageJson::new).collect(Collectors.toList());
                 result.forEach(msg -> {
-                    if (msg.creator.serialNumber.equals(mySerial)) {
+                    if (msg.creatorSerial.equals(mySerial)) {
                         msg.isMine = true;
                     }
                 });
-                out.println(Utils.createJsonSuccessObject(new ChatMessagesJson(result)));
+                out.println(Utils.createJsonSuccessObject(new ChatMessagesJson(result, chat.getTotalCount())));
 
             } else {
                 out.println(Utils.createJsonErrorObject("Couldn't load chat data due to an unknown reason."));
@@ -65,6 +62,5 @@ public class GetMessagesServlet extends HttpServlet {
                 out.println(Utils.createJsonErrorObject("Couldn't load chat data due to an unknown reason."));
             }
         }
-
     }
 }
