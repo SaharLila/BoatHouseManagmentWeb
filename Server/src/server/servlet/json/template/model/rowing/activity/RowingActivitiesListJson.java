@@ -1,6 +1,5 @@
 package server.servlet.json.template.model.rowing.activity;
 
-import engine.model.activity.request.Request;
 import engine.model.activity.rowing.RowingActivity;
 
 import java.util.ArrayList;

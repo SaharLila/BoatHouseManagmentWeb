@@ -4,7 +4,6 @@ import engine.api.EngineContext;
 import engine.database.collection.RowingActivitiesCollectionManager;
 import engine.model.activity.request.Request;
 import engine.model.boat.Boat;
-import server.servlet.json.template.model.boat.BoatJson;
 import server.servlet.json.template.model.boat.BoatsJson;
 import server.utils.Utils;
 
@@ -15,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 

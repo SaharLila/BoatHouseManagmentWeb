@@ -50,6 +50,9 @@ public class ApproveMergedRequestServlet extends HttpServlet {
 
                 RowingActivity rowingActivityToAdd = new RowingActivity(theBoat, requestToApprove);
                 if(eng.getRowingActivitiesCollectionManager().add(rowingActivityToAdd)){
+                    rowingActivityToAdd.getRequest().getAllRowers()
+                            .forEach(rower -> eng.addUserNotification(rower,
+                                    "A request that you were registered to has been approved."));
                     out.println(Utils.createJsonSuccessObject(new RowingActivityJson(rowingActivityToAdd)));
                 }else {
                     out.println(Utils.createJsonErrorObject(null));

@@ -76,6 +76,9 @@ public class UpdateRequestServlet extends HttpServlet {
                         if (!errors.isEmpty()) {
                             out.println(Utils.createJsonErrorObject(errors));
                         } else {
+                            requestToEdit.getAllRowers()
+                                    .forEach(rower -> eng.addUserNotification(rower,
+                                            "A request that you are registered to has been changed."));
                             out.println(Utils.createJsonSuccessObject(true));
                         }
                     }

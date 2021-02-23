@@ -63,6 +63,16 @@ public class CreateRequestServlet extends HttpServlet {
 
         try (PrintWriter out = resp.getWriter()) {
             if (errors.size() == 0 && newRequest != null) {
+
+                newRequest.getAllRowers()
+                        .forEach(rower -> eng.addUserNotification(rower,
+                                "You were registered to a new rowing request."));
+
+                if (newRequest.isApproved()) {
+                    newRequest.getAllRowers()
+                            .forEach(rower -> eng.addUserNotification(rower,
+                                    "A request that you were registered to has been approved."));
+                }
                 out.println(Utils.createJsonSuccessObject(eng.getRequestsCollectionManager().add(newRequest)));
             } else {
                 out.println(Utils.createJsonErrorsListObject(errors));
@@ -95,14 +105,7 @@ public class CreateRequestServlet extends HttpServlet {
                     errors.add("Some of the other rowers couldn't be added to the request.");
                     break;
                 }
-                //TODO delete
-                //                } else if (!EngineContext.getInstance().getRequestsCollectionManager()
-                //                        .isRowerAvailableForActivity(temp, weeklyActivity, activityDate)) {
-                //                    errors.add(String.format(
-                //                            "%s already takes a part in other club activity during the request time frame",
-                //                            temp.getName()));
-                //                    break;
-                //                }
+
                 result.add(temp);
             }
         }

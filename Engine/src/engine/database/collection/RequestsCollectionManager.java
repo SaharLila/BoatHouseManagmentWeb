@@ -4,7 +4,6 @@ import engine.api.EngineInterface;
 import engine.database.CollectionManager;
 import engine.model.activity.request.Request;
 import engine.model.activity.request.RequestModifier;
-import engine.model.activity.rowing.RowingActivity;
 import engine.model.activity.weekly.activity.WeeklyActivity;
 import engine.model.rower.Rower;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;

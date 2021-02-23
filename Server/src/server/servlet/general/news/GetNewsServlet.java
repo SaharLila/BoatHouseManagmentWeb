@@ -2,10 +2,7 @@ package server.servlet.general.news;
 
 import com.google.gson.Gson;
 import engine.api.EngineContext;
-import engine.model.news.News;
-import engine.model.news.NewsItem;
 import server.servlet.json.news.NewsJson;
-import server.utils.Utils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

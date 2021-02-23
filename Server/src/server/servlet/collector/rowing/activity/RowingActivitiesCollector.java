@@ -2,10 +2,7 @@ package server.servlet.collector.rowing.activity;
 
 import com.google.gson.Gson;
 import engine.api.EngineContext;
-import engine.model.activity.request.Request;
 import engine.model.activity.rowing.RowingActivity;
-import engine.model.rower.Rower;
-import server.servlet.json.template.model.request.RequestsJson;
 import server.servlet.json.template.model.rowing.activity.RowingActivitiesListJson;
 
 import javax.servlet.ServletException;
@@ -15,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(urlPatterns = "/collectors/rowing-activities")

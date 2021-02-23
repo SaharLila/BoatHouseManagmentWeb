@@ -189,7 +189,7 @@ function makeDisableToEdit(editBtn) {
         saveEditMessage(rowEl, string);
         changeIcons(editBtn);
     } else {
-        showError("News could not be empty");
+        showError("News message cannot be empty");
 
     }
 }
@@ -251,7 +251,7 @@ function getRowHtml() {
 function getNoDataElement() {
     let header = document.createElement("h4");
     let div = document.createElement("div");
-    header.innerText = "There is no news so far";
+    header.innerText = "Couldn't find any news to show";
     header.style.marginTop = "50px";
     div.classList.add("col-12");
     div.style.textAlign = "center";

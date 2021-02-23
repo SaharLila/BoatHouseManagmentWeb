@@ -1,6 +1,5 @@
 package server.servlet.views.weeklyActivities;
 
-import com.sun.org.apache.xerces.internal.util.HTTPInputSource;
 import server.constant.ePages;
 import server.utils.Utils;
 

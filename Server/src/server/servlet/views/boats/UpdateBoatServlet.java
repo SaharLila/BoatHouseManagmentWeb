@@ -67,6 +67,9 @@ public class UpdateBoatServlet extends HttpServlet {
                     if (!errors.isEmpty()) {
                         out.println(Utils.createJsonErrorsListObject(errors));
                     } else {
+                        if (boatToEdit.hasOwner()) {
+                            eng.addUserNotification(boatToEdit.getOwner(), "One of your private boats has been updated.");
+                        }
                         out.println(Utils.createJsonSuccessObject(true));
                     }
                 }

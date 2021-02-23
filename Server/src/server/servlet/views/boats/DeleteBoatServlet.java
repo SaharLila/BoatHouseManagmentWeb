@@ -28,6 +28,9 @@ public class DeleteBoatServlet extends HttpServlet {
             if (boatToDelete == null) {
                 out.println(Utils.createJsonErrorObject("Boat not found"));
             } else {
+                if (boatToDelete.hasOwner()) {
+                    eng.addUserNotification(boatToDelete.getOwner(), "One of your private boats has been removed.");
+                }
                 out.println(Utils.createJsonSuccessObject(eng.getBoatsCollectionManager().remove(boatToDelete)));
             }
         }

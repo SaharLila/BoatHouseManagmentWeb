@@ -1,6 +1,5 @@
 package server.servlet.json.template.model.boat;
 
-import engine.model.Model;
 import engine.model.boat.Boat;
 import server.servlet.json.template.model.rower.RowerJson;
 

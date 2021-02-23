@@ -1,7 +1,6 @@
 package server.servlet.general;
 
 import engine.api.EngineContext;
-import server.BHMServer;
 import server.constant.Constants;
 
 import javax.servlet.ServletException;

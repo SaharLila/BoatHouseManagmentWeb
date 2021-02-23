@@ -50,6 +50,9 @@ public class FindRowersCountStatusServlet extends HttpServlet {
                     // we can approve the request
                     RowingActivity rowingActivity = new RowingActivity(theBoat, requestToCheck);
                     eng.getRowingActivitiesCollectionManager().add(rowingActivity);
+                    rowingActivity.getRequest().getAllRowers()
+                            .forEach(rower -> eng.addUserNotification(rower,
+                                    "A request that you were registered to has been approved."));
                     out.println(Utils.createJsonSuccessObject(new RowingActivityJson(rowingActivity)));
                 }
 

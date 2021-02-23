@@ -7,19 +7,16 @@ import engine.model.activity.request.RequestModifier;
 import engine.model.activity.rowing.RowingActivity;
 import engine.model.boat.Boat;
 import engine.model.rower.Rower;
-import server.servlet.json.template.model.rower.RowerJson;
 import server.servlet.json.template.model.rowing.activity.RowingActivityJson;
 import server.utils.Utils;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -55,6 +52,9 @@ public class ApproveOverflowRequestServlet extends HttpServlet {
                 eng.getRequestsCollectionManager().add(ClonedRequest);
 
                 if (addRowingActivitySucceed) {
+                    rowingActivity.getRequest().getAllRowers()
+                            .forEach(rower -> eng.addUserNotification(rower,
+                                    "A request that you were registered to has been approved."));
                     out.println(Utils.createJsonSuccessObject(new RowingActivityJson(rowingActivity)));
                 } else {
                     out.println(Utils.createJsonErrorObject(null));

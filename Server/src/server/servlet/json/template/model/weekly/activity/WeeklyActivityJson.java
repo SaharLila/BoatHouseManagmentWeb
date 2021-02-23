@@ -3,10 +3,8 @@ package server.servlet.json.template.model.weekly.activity;
 
 import engine.model.activity.weekly.activity.WeeklyActivity;
 import engine.model.boat.Boat;
-import server.servlet.json.template.model.boat.BoatJson;
 
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 public class WeeklyActivityJson {
     public final String id;

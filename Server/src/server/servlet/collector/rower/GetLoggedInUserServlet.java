@@ -5,7 +5,6 @@ import engine.model.rower.Rower;
 import server.servlet.json.template.model.rower.RowerJson;
 import server.utils.Utils;
 
-import javax.rmi.CORBA.Util;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

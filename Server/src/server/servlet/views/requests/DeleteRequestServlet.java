@@ -1,7 +1,6 @@
 package server.servlet.views.requests;
 
 import engine.api.EngineContext;
-import engine.database.collection.RowingActivitiesCollectionManager;
 import engine.model.activity.request.Request;
 import engine.model.activity.rowing.RowingActivity;
 import server.utils.Utils;
@@ -14,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.HashMap;
 
 @WebServlet(urlPatterns = "/requests/delete")

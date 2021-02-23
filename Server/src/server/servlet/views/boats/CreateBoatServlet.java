@@ -46,6 +46,7 @@ public class CreateBoatServlet extends HttpServlet {
 
         if (owner != null) {
             boatToAdd = new Boat(name, serialNumber, boatType, isWide, isSeaBoat, isDisable, owner);
+            eng.addUserNotification(owner, "A new private boat was added under your account");
         } else {
             boatToAdd = new Boat(name, serialNumber, boatType, isWide, isSeaBoat, isDisable);
         }

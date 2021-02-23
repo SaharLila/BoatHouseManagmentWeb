@@ -1,7 +1,5 @@
 package server.servlet.general.news;
 
-import com.sun.javafx.webkit.CursorManagerImpl;
-import com.sun.xml.internal.ws.api.ha.StickyFeature;
 import engine.api.EngineContext;
 import engine.model.news.NewsItem;
 import server.utils.Utils;

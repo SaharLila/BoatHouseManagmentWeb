@@ -1,7 +1,6 @@
 package server.servlet.general.news;
 
 import engine.api.EngineContext;
-import engine.model.news.NewsItem;
 import server.utils.Utils;
 
 import javax.servlet.ServletException;
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
-import java.util.stream.Collectors;
 
 
 @WebServlet(urlPatterns = "/news/delete")

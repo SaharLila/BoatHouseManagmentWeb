@@ -3,7 +3,6 @@ package server.servlet.views.personalDetails;
 import server.constant.ePages;
 import server.utils.Utils;
 
-import javax.rmi.CORBA.Util;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
