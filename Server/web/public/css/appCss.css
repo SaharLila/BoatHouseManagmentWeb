@@ -169,3 +169,19 @@ th {
         transform: rotate(90deg);
     }
 }
+
+.btn-blue {
+    background-color: #56baed !important;
+}
+
+.btn-messageEdit {
+    background-color: #ffffff !important;
+    color: #56baed !important;
+}
+
+.addNews{
+    float: right !important;
+    cursor: pointer !important;
+}
+
+
