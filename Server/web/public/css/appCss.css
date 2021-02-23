@@ -179,9 +179,19 @@ th {
     color: #56baed !important;
 }
 
-.addNews{
+.addNews {
     float: right !important;
     cursor: pointer !important;
+}
+
+.newsBtnLeft {
+    margin-right: 0 !important;
+    padding: 0 !important;
+}
+
+.newsBtnRight {
+    margin-left: 0 !important;
+    padding: 0 !important;
 }
 
 

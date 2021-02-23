@@ -11,6 +11,7 @@ import engine.model.activity.weekly.activity.WeeklyActivity;
 import engine.model.activity.weekly.activity.WeeklyActivityModifier;
 import engine.model.boat.Boat;
 import engine.model.boat.BoatModifier;
+import engine.model.news.News;
 import engine.model.rower.Rower;
 import engine.model.rower.RowerModifier;
 import engine.utils.crypto.RC4;
@@ -37,6 +38,7 @@ public class EngineContext implements EngineInterface, Serializable {
     private final RowingActivitiesCollectionManager rowingActivities;
     private String modifyCallback;
     private final Map <String, String> sessionsUsersMap = new HashMap<>();
+    private final News news = new News();
 
     private EngineContext() {
         this.rowers = new RowersCollectionManager(this);
@@ -608,5 +610,9 @@ public class EngineContext implements EngineInterface, Serializable {
         }
 
         return null;
+    }
+
+    public News getNews(){
+        return this.news;
     }
 }

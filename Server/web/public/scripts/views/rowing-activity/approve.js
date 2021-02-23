@@ -35,7 +35,6 @@ let howManyLeft = 0;
 let rowingActivity;
 
 export function startToApprove() {
-    alert(id);
     handleElementsByStep();
 }
 

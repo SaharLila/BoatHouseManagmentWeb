@@ -1,112 +1,66 @@
 <section class="content">
     <div class="row">
-        <div class="col-12">
-            <div class="card" style="margin-top: 0px">
-                <div class="row card-header">
-                    <div class="col-10"><h3 class="card-title"></h3></div>
-                    <div class="col-2">
-
+        <div class="col-lg-4 col-md-6 col-sm-6">
+            <div class="card card-stats">
+                <div class="card-header card-header-primary card-header-icon">
+                    <div class="card-icon">
+                        <i class="fa fa-user"></i>
                     </div>
+                    <p class="card-category">Rowers Count</p>
+                    <h3 class="card-title" id="rowersCountText">
+                    </h3>
                 </div>
-                <!-- /.card-header -->
-                <div class="card-body">
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-6">
+            <div class="card card-stats">
+                <div class="card-header card-header-primary card-header-icon">
+                    <div class="card-icon">
+                        <i class="fa fa-anchor"></i>
+                    </div>
+                    <p class="card-category">Boats Count</p>
+                    <h3 class="card-title" id="boatsCountText">
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-6">
+            <div class="card card-stats">
+                <div class="card-header card-header-primary card-header-icon">
+                    <div class="card-icon">
+                        <i class="fa fa-ship"></i>
+                    </div>
+                    <p class="card-category">Rowing activities Count</p>
+                    <h3 class="card-title" id="activitiesCountText">
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-12 col-md-10">
+            <div class="card">
+                <div class="card-header card-header-tabs card-header-primary">
                     <div class="row">
-                        <div class="col-1"></div>
-                        <div class="col-12 col-md-10">
-                            <div class="card">
-                                <div class="card-header card-header-tabs card-header-primary">
-                                    <div class="row">
-                                        <div class="col-4">
-                                            <span class="nav-tabs-title">Whats New ?</span>
-                                        </div>
-                                        <div class="col-8">
-                                            <span class="nav-tabs-title addNews">
+                        <div class="col-4">
+                            <span class="nav-tabs-title">Whats New ?</span>
+                        </div>
+                        <div class="col-8">
+                                            <span class="nav-tabs-title addNews" id="addItemBtn">
                                             <i class="fa fa-plus" style="color: white"></i>
                                             </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-body" id="generalMessagesCard">
-                                    <div id="newsContainer" class="row">
-                                        <div class="row">
-                                            <div class="col-10">
-                                                <p class="form-control">
-                                                    Sign contract for "What are conferencefffff ffffffffffffff?"
-                                                </p>
-                                            </div>
-                                            <div class="col-2">
-                                                <div class="row">
-                                                    <div class="col-6">
-                                                        <button type="button" rel="tooltip" title=""
-                                                                class="btn btn-messageEdit btn-link btn-sm"
-                                                                data-original-title="Edit Task">
-                                                            <i class="material-icons">edit</i>
-
-                                                        </button>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <button type="button" rel="tooltip" title=""
-                                                                class="btn btn-danger btn-link btn-sm"
-                                                                data-original-title="Remove">
-                                                            <i class="material-icons">close</i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <table class="table" style="min-width: 100% !important;">
-                                        <tbody>
-                                        <tr>
-                                            <td>
-                                                <p class="form-control">
-                                                    Sign contract for "What are conferencefffff ffffffffffffff?"
-                                                </p>
-                                            </td>
-                                            <td class="td-actions text-right">
-                                                <button type="button" rel="tooltip" title=""
-                                                        class="btn btn-messageEdit btn-link btn-sm"
-                                                        data-original-title="Edit Task">
-                                                    <i class="material-icons">edit</i>
-                                                </button>
-                                                <button type="button" rel="tooltip" title=""
-                                                        class="btn btn-danger btn-link btn-sm"
-                                                        data-original-title="Remove">
-                                                    <i class="material-icons">close</i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <p class="form-control"> Sign contract for What are conference
-                                                    organizers afraid of?
-                                                </p>
-
-                                            </td>
-                                            <td class="td-actions text-right">
-                                                <button type="button" rel="tooltip" title=""
-                                                        class="btn btn-messageEdit btn-link btn-sm"
-                                                        data-original-title="Edit Task">
-                                                    <i class="material-icons">edit</i>
-                                                </button>
-                                                <button type="button" rel="tooltip" title=""
-                                                        class="btn btn-danger btn-link btn-sm"
-                                                        data-original-title="Remove">
-                                                    <i class="material-icons">close</i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
                         </div>
+                    </div>
+                </div>
+                <div class="card-body" id="generalMessagesCard">
+                    <div id="newsContainer">
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <script type="application/javascript" src="/public/scripts/views/home/news.js"></script>
+    <script type="application/javascript" src="/public/scripts/views/home/floatCards.js"></script>
 </section>
