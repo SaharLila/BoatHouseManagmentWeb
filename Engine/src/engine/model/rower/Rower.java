@@ -36,6 +36,8 @@ public class Rower extends Model implements Serializable {
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
     private LocalDate expirationDate;
     private boolean isAdmin;
+    @XmlElementWrapper
+    private List<Notification> notifications;
 
     public Rower() {
         this.serialNumber = null;
@@ -59,6 +61,7 @@ public class Rower extends Model implements Serializable {
         setPhoneNumber(phoneNumber);
         this.privateBoatsSerialNumbers = new HashSet<>();
         this.notes = new ArrayList<>();
+        this.notifications = new ArrayList<>();
     }
 
     public Rower(String serialNumber, String name, int age, eRowerRank rank, String password, boolean isAdmin,
@@ -66,6 +69,7 @@ public class Rower extends Model implements Serializable {
 
         this(serialNumber, name, age, rank, password, isAdmin, email, phoneNumber);
         Collections.addAll(this.privateBoatsSerialNumbers, privateBoatsSerialNumbers);
+        this.notifications = new ArrayList<>();
     }
 
     // For XML adapter only
@@ -83,6 +87,7 @@ public class Rower extends Model implements Serializable {
         this.notes = new ArrayList<>();
         this.expirationDate = expirationDate;
         this.joinDate = joinDate;
+        this.notifications = new ArrayList<>();
     }
 
 
@@ -98,7 +103,8 @@ public class Rower extends Model implements Serializable {
     }
 
 
-    private Rower(String id, String serialNumber, String name, int age, eRowerRank rank, String password, boolean isAdmin, String email, String phoneNumber, String[] ids) {
+    private Rower(String id, String serialNumber, String name, int age, eRowerRank rank, String password, boolean isAdmin,
+                  String email, String phoneNumber, String[] ids) {
         this(serialNumber, name, age, rank, password, isAdmin, email, phoneNumber, ids);
         this.setId(id);
     }
@@ -243,11 +249,36 @@ public class Rower extends Model implements Serializable {
         return this.serialNumber;
     }
 
+    // Notifications
+
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void cleanNotifications() {
+        this.notifications.clear();
+    }
+
+    public void deleteNotification(String id) {
+        this.notifications.stream()
+                .filter(notification -> notification.getId().equals(id))
+                .findFirst().ifPresent(toDelete -> this.notifications.remove(toDelete));
+    }
+
+    public void addNotification(String content) {
+        this.notifications.add(new Notification(content));
+    }
+
+    public void setNotificationWatched(String id) {
+        this.notifications.stream()
+                .filter(notification -> notification.getId().equals(id))
+                .findFirst().ifPresent(Notification::setWatched);
+    }
+
     @Override
     public Rower clone() {
         return clone(false);
     }
-
 
     public Rower clone(boolean keepId) {
         List<String> privateArr = new ArrayList<>(this.privateBoatsSerialNumbers);
@@ -295,6 +326,19 @@ public class Rower extends Model implements Serializable {
             return null;
         }
 
+        public static int getIntFromRank(eRowerRank rank) {
+            switch (rank) {
+                case BEGINNER:
+                    return 0;
+                case AVERAGE:
+                    return 1;
+                case PRO:
+                    return 2;
+            }
+
+            return -1;
+        }
+
         public String getRankName() {
             String result = null;
 
@@ -311,19 +355,6 @@ public class Rower extends Model implements Serializable {
             }
 
             return result;
-        }
-
-        public static int getIntFromRank(eRowerRank rank) {
-            switch (rank) {
-                case BEGINNER:
-                    return 0;
-                case AVERAGE:
-                    return 1;
-                case PRO:
-                    return 2;
-            }
-
-            return -1;
         }
     }
 }

@@ -4,8 +4,8 @@ import engine.api.EngineContext;
 import server.chat.Chat;
 import server.chat.Message;
 import server.constant.Constants;
-import server.servlet.json.chat.ChatMessagesJson;
-import server.servlet.json.chat.MessageJson;
+import server.servlet.json.template.chat.ChatMessagesJson;
+import server.servlet.json.template.chat.MessageJson;
 import server.utils.Utils;
 
 import javax.servlet.ServletException;
@@ -25,13 +25,17 @@ public class GetMessagesServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Chat chat = (Chat) req.getServletContext().getAttribute(Constants.chatAtt);
+        int result = chat.getTotalCount();
+        Object initialValue = req.getSession().getAttribute(Constants.initChatVersion);
+
+        if (initialValue != null) {
+            result = Integer.parseInt(initialValue.toString());
+        } else {
+            req.getSession().setAttribute(Constants.initChatVersion, Integer.toString(chat.getTotalCount()));
+        }
 
         try (PrintWriter out = resp.getWriter()) {
-            if (chat != null) {
-                out.println(Utils.createJsonSuccessObject(chat.getTotalCount()));
-            } else {
-                out.println(Utils.createJsonErrorObject(null));
-            }
+            out.println(Utils.createJsonSuccessObject(result));
         }
     }
 

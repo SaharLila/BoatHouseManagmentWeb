@@ -17,9 +17,7 @@ import engine.utils.data.structure.Triple;
 import javafx.util.Pair;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 public interface EngineInterface {
@@ -191,6 +189,10 @@ public interface EngineInterface {
      * Save the engine requests collection to a XML file.
      */
     void saveRequestsCollection();
+
+    void addUserNotification(Rower rower, String content);
+
+    void addNotificationToAllUsers(String content);
 
     Object find(Object objectToFind);
 

@@ -6,15 +6,17 @@ const notifications = document.getElementById("notificationDropDown");
 const notificationsCounter = document.getElementById("notificationsCounter");
 const removeAllNotificationsBtn = document.getElementById('removeAllNtfsLink');
 const notificationsRefreshRate = 10 * 1000;
+let countInterval;
+let refreshInterval;
 
 document.addEventListener("DOMContentLoaded", function () {
     getNavMenuItems();
     setCurrentYear();
     initNotifications();
     initJqueryPlugins();
-    refreshNotificationsCount();
+    refreshUnreadCount();
+    setIntervals(false);
 });
-
 
 function initJqueryPlugins() {
     $('.datepicker2').datepicker({
@@ -84,18 +86,16 @@ function initDateTmePicker() {
 
 // Notifications
 
-// TODO - delete
-insertSingleNotification(buildNotificationElement("content", "20/2/2020 20:00", 1, true));
-insertSingleNotification(buildNotificationElement("content", "20/2/2020 20:00", 2, false));
-insertSingleNotification(buildNotificationElement("content", "20/2/2020 20:00", 3, true));
 
-
-async function refreshNotificationsCount() {
-    setInterval(function () {
-        notificationsCounter.innerText = countUnreadNotificationsInServer();
-    }, notificationsRefreshRate)
+function setIntervals(isOpen) {
+    if (isOpen) {
+        clearInterval(countInterval);
+        refreshInterval = setInterval(getAndInsertNotifications, notificationsRefreshRate);
+    } else {
+        clearInterval(refreshInterval);
+        countInterval = setInterval(refreshUnreadCount, notificationsRefreshRate);
+    }
 }
-
 
 function insertSingleNotification(element) {
     notifications.appendChild(element);
@@ -104,8 +104,10 @@ function insertSingleNotification(element) {
 function toggleNotifications() {
     if (notifications.classList.contains("show")) {
         notifications.classList.remove("show")
+        setIntervals(false);
     } else {
         getAndInsertNotifications();
+        setIntervals(true);
         notificationsCounter.innerText = "0";
         notifications.classList.add("show")
     }
@@ -114,6 +116,7 @@ function toggleNotifications() {
 function toggleNotificationsBody() {
     if (notifications.classList.contains("show")) {
         notifications.classList.remove("show")
+        setIntervals(false);
     }
 }
 
@@ -139,6 +142,7 @@ function getNoNotificationsElement() {
 
     let element = document.createElement("span");
     element.innerHTML = html;
+    element.classList.add("notificationElement");
     let dropDownItem = element.querySelector('.dropdown-item');
     dropDownItem.style.borderLeft = "3px solid";
     dropDownItem.style.borderLeftColor = "#56baed";
@@ -150,14 +154,14 @@ function buildNotificationElement(text, date, id, unread) {
     let html =
         "<div style=\"border-bottom: 1px ridge; min-width: 250px;\" class=\"dropdown-item\">\n" +
         "    <div class=\"row\">\n" +
-        "        <div class=\"col-10\">\n" +
+        "        <div class=\"col-9\">\n" +
         "            <span style=\"margin-right: 25px;\" href=\"#\">\n" +
         "               " + text +
         "            </span>\n" +
         "            <br>\n" +
         "            <span class=\"notificationDate\">" + date + "</span>\n" +
         "        </div>\n" +
-        "        <div class=\"col-2\">\n" +
+        "        <div class=\"col-3\">\n" +
         "            <i class=\"material-icons removeNotificationIcon\">delete_outline</i>\n" +
         "        </div>\n" +
         "    </div>\n" +
@@ -167,6 +171,7 @@ function buildNotificationElement(text, date, id, unread) {
     let element = document.createElement("span");
     element.innerHTML = html;
     element.id = "ntfs" + id;
+    element.classList.add("notificationElement");
     let dropDownItem = element.querySelector('.dropdown-item');
 
     if (unread) {
@@ -180,7 +185,7 @@ function buildNotificationElement(text, date, id, unread) {
     }
 
     element.querySelector('.removeNotificationIcon').addEventListener('click', function (e) {
-        removeNotificationNode(id);
+        removeNotification(id);
     })
 
     return element;
@@ -193,35 +198,107 @@ function removeNotificationNode(id) {
     }
 }
 
-function removeAllNotificationsNodes(idArr) {
-    if (idArr.length > 0) {
-        idArr.forEach(id => function (id) {
-            document.getElementById('ntfs' + id).remove();
-        })
-        insertSingleNotification(getNoNotificationsElement());
-    }
+function removeAllNotificationsNodes() {
+    document.querySelectorAll('.notificationElement').forEach(function (element) {
+        element.remove();
+    })
+    insertSingleNotification(getNoNotificationsElement());
 }
 
 function markAsReadOnServer(id) {
-    // TODO
+    fetch("/notifications/single?id=" + id, {
+        method: 'get',
+    });
 }
 
 function getAndInsertNotifications() {
-    //TODO
+    document.querySelectorAll('.notificationElement').forEach(function (element) {
+        element.remove();
+    })
+
+    fetch("/notifications/all", {
+        method: 'get',
+    }).then(async function (response) {
+        let count = 0;
+        let resAsJson = await response.json();
+        if (resAsJson.isSuccess) {
+            resAsJson.data.notifications.forEach(function (notification) {
+                let content = notification.content;
+                let id = notification.id;
+                let time = notification.creationTime;
+                let date = notification.creationDate;
+                let isWatched = notification.isWatched;
+                let dateString = date + " " + time;
+                insertSingleNotification(buildNotificationElement(content, dateString, id, !isWatched));
+                count++;
+            });
+            if (count === 0) {
+                insertSingleNotification(getNoNotificationsElement());
+            }
+        } else {
+            showError("Error getting user's notifications");
+        }
+    });
 }
 
+
 function removeNotification(id) {
-    //TODO - remove on server
-    removeNotificationNode(id);
+    let data = JSON.stringify({
+        id: id
+    })
+
+    fetch("/notifications/single", {
+        method: 'post',
+        headers: getPostHeaders(),
+        body: data
+    }).then(async function (response) {
+        let resAsJson = await response.json();
+        if (resAsJson.isSuccess) {
+            removeNotificationNode(id);
+        } else {
+            showError("Delete notifications failed.");
+        }
+    });
 }
 
 function removeAllNotifications() {
-    // TODO
-    let ids = []; // result from server
-    removeAllNotificationsNodes(ids);
+    fetch("/notifications/all", {
+        method: 'post',
+        headers: getPostHeaders(),
+    }).then(async function (response) {
+        let resAsJson = await response.json();
+        if (resAsJson.isSuccess) {
+            removeAllNotificationsNodes(getCurrentNotificationsIds());
+        } else {
+            showError("Delete notifications failed.");
+        }
+    });
 }
 
 function countUnreadNotificationsInServer() {
-    return "4"; // TODO
+    return fetch("/notifications/countUnread", {
+        method: 'get',
+    }).then(async function (response) {
+        let resAsJson = await response.json();
+        if (resAsJson.isSuccess) {
+            return resAsJson.data;
+        } else {
+            return 0;
+        }
+    });
+}
+
+function refreshUnreadCount() {
+    countUnreadNotificationsInServer().then(function (result) {
+        notificationsCounter.innerText = result.toString();
+    });
+}
+
+function getCurrentNotificationsIds() {
+    let res = [];
+    document.querySelectorAll('.notificationElement').forEach(function (el) {
+        res.push(el.id);
+    })
+    return res;
 }
 

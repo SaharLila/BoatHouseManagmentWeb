@@ -1,4 +1,4 @@
-package server.servlet.json.chat;
+package server.servlet.json.template.chat;
 
 import server.chat.Message;
 
