@@ -28,6 +28,7 @@ public class AddNewsItemServlet extends HttpServlet {
         try (PrintWriter out = resp.getWriter()) {
             NewsItem newsItemToAdd = new NewsItem(messageToAdd);
             eng.getNews().addItem(newsItemToAdd);
+            eng.addNotificationToAllUsers("A new message was added to the news inbox");
             out.println(Utils.createJsonSuccessObject(newsItemToAdd.getId()));
         }
     }

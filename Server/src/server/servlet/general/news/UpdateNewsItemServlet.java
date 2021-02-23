@@ -30,6 +30,7 @@ public class UpdateNewsItemServlet extends HttpServlet {
                     .filter(newsItem -> newsItem.getId() == newsItemId).collect(Collectors.toList()).get(0);
             newsItemToUpdate.setContent(newContent);
 
+            eng.addNotificationToAllUsers("A message from the news inbox was changed");
             out.println(Utils.createJsonSuccessObject(true));
         }
     }
