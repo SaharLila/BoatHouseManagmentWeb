@@ -2,7 +2,7 @@ const chatEl = document.getElementById('chat');
 const chatButton = document.getElementById('chatImgContainer');
 const chatCount = document.getElementById('chatCount');
 const refreshRateOpen = timeOutTime;
-const refreshRateClose = 30 * 1000;
+const refreshRateClose = 15 * 1000;
 let refreshRate = refreshRateClose;
 let closeButton;
 let chatMessagesDiv;

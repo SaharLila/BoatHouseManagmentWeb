@@ -1,5 +1,6 @@
 package server.servlet;
 
+import engine.api.EngineContext;
 import server.constant.ePages;
 import server.utils.Utils;
 
@@ -18,6 +19,7 @@ public class TestServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        EngineContext.getInstance().getRowersCollectionManager().get(0).addNotification("test notification");
         Utils.renderLayout(req, resp, "/public/html/test.html", ePages.ROWERS);
     }
 }

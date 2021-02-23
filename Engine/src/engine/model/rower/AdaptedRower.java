@@ -19,6 +19,15 @@ public class AdaptedRower extends Model {
     private String[] privateBoatsSerialNumbers;
     private boolean isAdmin;
     private String id;
+    private List<Notification> notifications;
+
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
+    }
 
     public String getId() {
         return id;

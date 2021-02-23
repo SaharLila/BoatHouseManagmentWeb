@@ -253,6 +253,27 @@ public class EngineContext implements EngineInterface, Serializable {
     }
 
     /**
+     * Notifications functions.
+     */
+
+
+    @Override
+    public void addUserNotification(Rower rower, String content) {
+        this.rowers.toArrayList().stream()
+                .filter(user -> user.equals(rower))
+                .findFirst()
+                .ifPresent(rowerToAdd -> rowerToAdd.addNotification(content));
+    }
+
+    @Override
+    public void addNotificationToAllUsers(String content) {
+        this.rowers.forEach(rower -> addUserNotification(rower, content));
+    }
+
+    /**********************************************************************************************************/
+
+
+    /**
      * Collection managers getters.
      */
 
@@ -481,7 +502,6 @@ public class EngineContext implements EngineInterface, Serializable {
         return this.rowers.isSerialNumberAvailable(serial);
     }
 
-
     /**************************************************************************************************************/
 
     @Override
@@ -513,7 +533,7 @@ public class EngineContext implements EngineInterface, Serializable {
     }
 
     @Override
-    public void logout(String sessionId){
+    public void logout(String sessionId) {
         this.sessionsUsersMap.remove(sessionId);
     }
 
@@ -585,11 +605,11 @@ public class EngineContext implements EngineInterface, Serializable {
                     Rower.eRowerRank.PRO, "123456", true, "admin@gmail.com", "054-0000000"));
             this.rowers.shallowAdd(new Rower("notAdminId", "notAdmin", (short) 25,
                     Rower.eRowerRank.PRO, "123456", false, "notAdmin@gmail.com", "054-0000000"));
-           this.boats.add(new Boat("boat1", "boatSerial1", Boat.eBoatType.DUE_SINGLE_OAR_WITH_COXWAIN, false, true, false));
-           this.boats.add(new Boat("boat2", "boatSerial2", Boat.eBoatType.DUE_SINGLE_OAR_WITH_COXWAIN, true, true, true));
-           this.boats.add(new Boat("boat3", "boatSerial3", Boat.eBoatType.DUE_SINGLE_OAR_WITH_COXWAIN, true, false, false));
-           this.boats.add(new Boat("boat4", "boatSerial4", Boat.eBoatType.DUE_SINGLE_OAR_WITH_COXWAIN, true, true, false));
-           this.boats.add(new Boat("boat5", "boatSerial5", Boat.eBoatType.DUE_SINGLE_OAR_WITH_COXWAIN, true, false, false));
+            this.boats.add(new Boat("boat1", "boatSerial1", Boat.eBoatType.DUE_SINGLE_OAR_WITH_COXWAIN, false, true, false));
+            this.boats.add(new Boat("boat2", "boatSerial2", Boat.eBoatType.DUE_SINGLE_OAR_WITH_COXWAIN, true, true, true));
+            this.boats.add(new Boat("boat3", "boatSerial3", Boat.eBoatType.DUE_SINGLE_OAR_WITH_COXWAIN, true, false, false));
+            this.boats.add(new Boat("boat4", "boatSerial4", Boat.eBoatType.DUE_SINGLE_OAR_WITH_COXWAIN, true, true, false));
+            this.boats.add(new Boat("boat5", "boatSerial5", Boat.eBoatType.DUE_SINGLE_OAR_WITH_COXWAIN, true, false, false));
             //TODO - delete not admin user
         } catch (Exception ex) {
 
