@@ -101,11 +101,11 @@ function closeChat() {
 }
 
 
-const html = "<div id=\"chat-container\" class=\"container col-12\">\n" +
+const html = "<div id=\"chat-container\" class=\"pull-right fixed-bottom container offset-md-6 col-11 col-md-5\">\n" +
     "    <div id=\"chat-header\" class=\"row\">\n" +
     "        <div class=\"col-12 alert alert-primary\">\n" +
     "            Chat\n" +
-    "            <a id='closeChat' style='cursor: pointer'><i style='color: white' class='fa fa-close pull-right'></i></a>" +
+    "            <a id='closeChat' style='cursor: pointer'><i style='color: white' class='fa fa-close pull-right'></i></a>\n" +
     "        </div>\n" +
     "    </div>\n" +
     "    <div id=\"chat-body\" class=\"row\">\n" +
@@ -114,15 +114,15 @@ const html = "<div id=\"chat-container\" class=\"container col-12\">\n" +
     "        </div>\n" +
     "    </div>\n" +
     "    <div id=\"chat-footer\" class=\"row\">\n" +
-    "        <div class=\"col-10\">\n" +
+    "        <div class=\"col-10 col-md-11\">\n" +
     "            <input id=\"chat-input\" type=\"text\" class=\"text-input\"\n" +
     "                   placeholder=\"Enter A Message...\">\n" +
     "        </div>\n" +
-    "        <div id='msgSendIcon' class=\"col-2\">\n" +
-    "            <i style='margin-top: 5px' class=\"fa fa-envelope-o\"></i>\n" +
+    "        <div class=\"col-2 col-md-1\">\n" +
+    "            <i class=\"fa fa-envelope-o\"></i>\n" +
     "        </div>\n" +
     "    </div>\n" +
-    "</div>\n";
+    "</div>";
 
 
 function createMessage(text, sender) {

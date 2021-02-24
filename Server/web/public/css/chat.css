@@ -6,19 +6,17 @@
     border: 2px solid;
     border-radius: 3px;
     background-color: white;
-}
-
-#chat-body {
-    height: 58%;
+    margin-bottom: 85px;
 }
 
 #chat-footer {
     padding-top: 10px;
-    height: 6vh;
-    border-top: 1px;
+    height: 50px;
+    border-top: 2px;
     border-top-color: #e2e2e2;
     border-top-style: solid;
 }
+
 
 #chat-header > div {
     margin-bottom: 2px;
