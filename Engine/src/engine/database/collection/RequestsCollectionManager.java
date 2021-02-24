@@ -9,6 +9,7 @@ import engine.model.rower.Rower;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -113,7 +114,8 @@ public class RequestsCollectionManager extends CollectionManager<Request> {
     }
 
     public void removeRowerFromFutureRequest(Rower rower) {
-        this.data.stream()
+        List<Request> tmpList = new ArrayList<>(this.data);
+        tmpList.stream()
                 .filter(request -> !request.isOver())
                 .filter(request -> request.getMainRower().equals(rower) ||
                         request.getRequestCreator().equals(rower) ||

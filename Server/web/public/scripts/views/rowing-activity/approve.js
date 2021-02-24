@@ -265,8 +265,8 @@ function initRowersToAdd() {
     newRowersSelectEl.innerHTML = "";
     getAvailableRowersToMerge(id, theBoat.serialNumber).then(function (rowersReqIdList) {
         if (howManyLeft > rowersReqIdList.length) {
-            showError("You don't have enough rowers in your request and we couldn't find enough rowers that can join this request.")
-            close();
+            showError("You don't have enough rowers in your request and we couldn't find enough rowers that can join this request.");
+            setTimeout(() => location.reload(), veryLongTimeOutTime);
         } else {
             rowersReqIdList.forEach(function (reqIdPair) {
                 let optionEl = buildRowerOptionEl(reqIdPair.rower);

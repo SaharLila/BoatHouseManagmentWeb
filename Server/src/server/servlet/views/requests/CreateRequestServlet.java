@@ -55,7 +55,8 @@ public class CreateRequestServlet extends HttpServlet {
 
             newRequest = new Request(mainRower, creator, weeklyActivity, activityDate, otherRowers, boatTypes);
 
-            checkForAutoApproveRequest(newRequest.getMainRower().getPrivateBoatsSerialNumbers(), eng, newRequest);
+
+
 
         } catch (Exception ex) {
             errors.add("Couldn't create the request due to an unknown error.");
@@ -73,7 +74,10 @@ public class CreateRequestServlet extends HttpServlet {
                             .forEach(rower -> eng.addUserNotification(rower,
                                     "A request that you were registered to has been approved."));
                 }
-                out.println(Utils.createJsonSuccessObject(eng.getRequestsCollectionManager().add(newRequest)));
+
+                boolean res = eng.getRequestsCollectionManager().add(newRequest);
+                checkForAutoApproveRequest(newRequest.getMainRower().getPrivateBoatsSerialNumbers(), eng, newRequest);
+                out.println(Utils.createJsonSuccessObject(res));
             } else {
                 out.println(Utils.createJsonErrorsListObject(errors));
             }

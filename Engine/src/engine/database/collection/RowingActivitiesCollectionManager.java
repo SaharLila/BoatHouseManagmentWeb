@@ -23,7 +23,8 @@ public class RowingActivitiesCollectionManager extends CollectionManager<RowingA
 
     @Override
     public boolean add(RowingActivity toAdd) {
-        boolean requestAlreadyApproved = !filter(rowingActivity -> rowingActivity.getRequest().equals(toAdd.getRequest())).isEmpty();
+        boolean requestAlreadyApproved = this.data.stream()
+                .filter(rowingActivity -> rowingActivity.getRequest().equals(toAdd.getRequest())).toArray().length != 0;
         boolean res = false;
         Objects.requireNonNull(this.engine)
                 .getRowingActivityModifier(toAdd, null).shallowSetBoat((Boat) this.engine.find(toAdd.getBoat()));

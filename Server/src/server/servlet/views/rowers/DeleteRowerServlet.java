@@ -42,14 +42,12 @@ public class DeleteRowerServlet extends HttpServlet {
                 String argsParam = data.get("args");
                 Args deleteRowerArgs = gson.fromJson(argsParam, Args.class);
                 if (deleteRowerArgs.shouldDeleteRower) {
-                    for (Boat boat : rowerBoats) {
-                        if (deleteRowerArgs.shouldDeleteBoats) {
+                    if (deleteRowerArgs.shouldDeleteBoats) {
+                        for (Boat boat : rowerBoats) {
                             eng.getBoatsCollectionManager().remove(boat);
-                        } else {
-                            eng.getBoatModifier(boat, null).removeOwner();
                         }
                     }
-                    out.println(Utils.createJsonSuccessObject(eng.removeObject(rowerToDelete)));
+                    out.println(Utils.createJsonSuccessObject(eng.getRowersCollectionManager().remove(rowerToDelete)));
                 }
             }
         }

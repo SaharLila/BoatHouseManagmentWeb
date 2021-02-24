@@ -20,16 +20,15 @@ public class NotificationActionsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String id = req.getParameter("id");
-        Rower loggedInUser = EngineContext.getInstance().getLoggedInUser(req.getRequestedSessionId());
+        Rower loggedInUser = EngineContext.getInstance().getRowerBySessionId(req.getRequestedSessionId());
 
         try (PrintWriter out = resp.getWriter()) {
-            if (id != null) {
+            if (id != null && loggedInUser != null) {
                 loggedInUser.setNotificationWatched(id);
                 out.println(Utils.createJsonSuccessObject(true));
             } else {
                 out.println(Utils.createJsonErrorObject(false));
             }
-
         }
     }
 
