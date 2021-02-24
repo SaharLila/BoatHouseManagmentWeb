@@ -7,13 +7,14 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.UUID;
 
 @XmlRootElement(name = "Notification")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Notification {
+public class Notification implements Serializable {
 
     private final String id;
     private final String content;
@@ -70,5 +71,11 @@ public class Notification {
 
     public LocalTime getCreationTime() {
         return creationTime;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return new Notification(this.id, this.getContent(),
+                this.getCreationDate(), this.getCreationTime(), this.isWatched);
     }
 }

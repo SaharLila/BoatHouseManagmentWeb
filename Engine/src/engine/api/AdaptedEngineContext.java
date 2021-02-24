@@ -4,6 +4,7 @@ import engine.model.activity.request.Request;
 import engine.model.activity.rowing.RowingActivity;
 import engine.model.activity.weekly.activity.WeeklyActivity;
 import engine.model.boat.Boat;
+import engine.model.news.News;
 import engine.model.rower.Rower;
 import engine.model.rower.RowerModifier;
 import engine.utils.crypto.RC4;
@@ -19,9 +20,9 @@ public class AdaptedEngineContext {
     private List<WeeklyActivity> weeklyActivities;
     private List<Request> requests;
     private List<RowingActivity> rowingActivities;
+    private News news;
 
     public AdaptedEngineContext() {
-
     }
 
     public AdaptedEngineContext(EngineInterface engineContext) {
@@ -40,6 +41,7 @@ public class AdaptedEngineContext {
         this.weeklyActivities = engineContext.getWeeklyActivitiesCollectionManager().toArrayList();
         this.requests = engineContext.getRequestsCollectionManager().toArrayList();
         this.rowingActivities = engineContext.getRowingActivitiesCollectionManager().toArrayList();
+        this.news = new News(engineContext.getNews().getItems());
     }
 
     public List<Rower> getRowers() {
@@ -81,4 +83,13 @@ public class AdaptedEngineContext {
     public void setRowingActivities(List<RowingActivity> rowingActivities) {
         this.rowingActivities = rowingActivities;
     }
+
+    public News getNews() {
+        return news;
+    }
+
+    public void setNews(News news) {
+        this.news = news;
+    }
+
 }

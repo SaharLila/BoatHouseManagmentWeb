@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
 function buildNewsCard(items) {
     items.forEach(item => {
         let rowEl = addRowToNews();
-        let paragraphEl = rowEl.querySelector("p")
+        let paragraphEl = rowEl.querySelector(".inboxTextItem")
         paragraphEl.innerText = item.content;
         rowEl.itemId = item.id;
     });
@@ -42,14 +42,12 @@ function initNews() {
         method: 'get'
     }).then(async function (response) {
         let resAsJson = await response.json();
-        let items = resAsJson.items;
-
-        return items;
+        return resAsJson.items;
     });
 }
 
 function addRowToNews() {
-    let noDataEl = newsContainer.querySelector("h4");
+    let noDataEl = newsContainer.querySelector(".inboxNoDataItem");
 
     if (noDataEl !== null) {
         noDataEl.parentElement.remove();
@@ -61,13 +59,17 @@ function addRowToNews() {
         res.querySelector("button").parentElement.parentElement.remove();
     }
 
+    let hr = document.createElement("hr");
+    hr.style.borderBottom = "1px solid";
+    hr.style.color = "#a0a0a0";
+    hr.style.width = "90%";
     newsContainer.appendChild(res);
-    newsContainer.appendChild(document.createElement("hr"));
+    newsContainer.appendChild(hr);
 
     return res;
 }
 
-function addItemBtnClickEventHandler(e) {
+function addItemBtnClickEventHandler() {
     let theRow = addRowToNews();
     let editBtn = theRow.querySelector(".btn-messageEdit");
     editBtn.addEventListener("click", editBtnClickEventHandler);
@@ -76,10 +78,10 @@ function addItemBtnClickEventHandler(e) {
     theRow.querySelector("input").focus();
 }
 
-function deleteBtnClickEventHandle(e) {
+function deleteBtnClickEventHandle() {
     let rowEl = this.parentElement.parentElement.parentElement.parentElement;
 
-    if (rowEl.itemId != undefined) {
+    if (rowEl.itemId !== undefined) {
         let data = JSON.stringify({
             itemToDeleteId: rowEl.itemId.toString()
         });
@@ -116,10 +118,11 @@ function initDeleteBtns() {
 
 function makeEnableToEdit(editBtn) {
     let rowEl = editBtn.parentElement.parentElement.parentElement.parentElement;
-    let paragraphEl = rowEl.querySelector("p");
-    let stringToEdit = paragraphEl.innerHTML;
-    let placeToInsert = paragraphEl.parentElement;
-    paragraphEl.remove();
+    let TextEl = rowEl.querySelector(".inboxTextItem");
+    let divEl = rowEl.querySelector(".inboxItemDiv");
+    let stringToEdit = TextEl.innerHTML;
+    let placeToInsert = divEl.parentElement;
+    divEl.remove();
 
     placeToInsert.appendChild(getInputEl(stringToEdit));
 }
@@ -181,20 +184,25 @@ function makeDisableToEdit(editBtn) {
         let string = inputEl.value;
         let placeToInsert = inputEl.parentElement;
         inputEl.remove();
-        let paragraphElement = document.createElement("p");
-        paragraphElement.innerText = string;
+        let textElement = document.createElement("li");
+        textElement.classList.add("inboxTextItem");
+        textElement.innerText = string;
+        let headerElement = document.createElement("h6");
+        headerElement.appendChild(textElement);
+        let divElement = document.createElement('div');
+        divElement.classList.add("inboxItemDiv");
+        divElement.appendChild(headerElement);
 
-        placeToInsert.appendChild(paragraphElement);
+        placeToInsert.appendChild(divElement);
         editBtn.isEditOn = false;
         saveEditMessage(rowEl, string);
         changeIcons(editBtn);
     } else {
         showError("News message cannot be empty");
-
     }
 }
 
-function editBtnClickEventHandler(e) {
+function editBtnClickEventHandler() {
     if (!this.isEditOn) {
         makeEnableToEdit(this);
         this.isEditOn = true;
@@ -223,27 +231,28 @@ function initEditBtns() {
 function getRowHtml() {
     let res = document.createElement("div");
     res.classList.add("row");
-    res.innerHTML = "<div class=\"col-10\">\n" +
-        "                                                <p>\n" +
-        "                                                </p>\n" +
-        "                                            </div>\n" +
-        "                                            <div class=\"col-2\">\n" +
-        "                                                <div class=\"row\">\n" +
-        "                                                    <div class=\"col-6\">\n" +
-        "                                                        <button type=\"button\"\n" +
-        "                                                                class=\"btn btn-messageEdit btn-link newsBtnLeft\">\n" +
-        "                                                            <i class=\"material-icons\">edit</i>\n" +
-        "                                                        </button>\n" +
-        "                                                    </div>\n" +
-        "                                                    <div class=\"col-6\">\n" +
-        "                                                        <button type=\"button\"\n" +
-        "                                                                class=\"btn btn-danger btn-link newsBtnRight\"\n" +
-        "                                                                data-original-title=\"Remove\">\n" +
-        "                                                            <i class=\"material-icons\">close</i>\n" +
-        "                                                        </button>\n" +
-        "                                                    </div>\n" +
-        "                                                </div>\n" +
-        "                                            </div>";
+    res.style.marginTop = "10px";
+    res.innerHTML =
+        "<div class=\"offset-1 col-8\">\n" +
+        "    <div class='inboxItemDiv'><h6><li class='inboxTextItem'></li></h6></div>\n" +
+        "</div>\n" +
+        "<div class=\"col-2\">\n" +
+        "    <div class=\"row\">\n" +
+        "        <div class=\"col-4\">\n" +
+        "            <button type=\"button\"\n" +
+        "                    class=\"btn btn-messageEdit btn-link newsBtnLeft\">\n" +
+        "                <i class=\"material-icons\">edit</i>\n" +
+        "            </button>\n" +
+        "        </div>\n" +
+        "        <div class=\"col-6\">\n" +
+        "            <button type=\"button\"\n" +
+        "                    class=\"btn btn-danger btn-link newsBtnRight\"\n" +
+        "                    data-original-title=\"Remove\">\n" +
+        "                <i class=\"material-icons\">close</i>\n" +
+        "            </button>\n" +
+        "        </div>\n" +
+        "    </div>\n" +
+        "</div>";
 
     return res;
 }
@@ -253,6 +262,7 @@ function getNoDataElement() {
     let div = document.createElement("div");
     header.innerText = "Couldn't find any news to show";
     header.style.marginTop = "50px";
+    header.classList.add("inboxNoDataItem")
     div.classList.add("col-12");
     div.style.textAlign = "center";
     div.appendChild(header);

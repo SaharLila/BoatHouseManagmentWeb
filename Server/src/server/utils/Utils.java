@@ -2,7 +2,6 @@ package server.utils;
 
 import com.google.gson.Gson;
 import engine.api.EngineContext;
-import javafx.util.Pair;
 import server.constant.Constants;
 import server.constant.ePages;
 import server.servlet.json.template.Response;
@@ -162,7 +161,7 @@ public class Utils {
         return xml.toString();
     }
 
-    public static Pair<Boolean, String> parsePartsRequest(HttpServletRequest req) throws IOException, ServletException {
+    public static Map.Entry<Boolean, String> parsePartsRequest(HttpServletRequest req) throws IOException, ServletException {
         Collection<Part> parts = req.getParts();
         StringBuilder xml = new StringBuilder();
         Boolean deleteAll = null;
@@ -179,6 +178,6 @@ public class Utils {
             }
         }
 
-        return new Pair<>(deleteAll, xml.toString());
+        return new AbstractMap.SimpleImmutableEntry<>(deleteAll, xml.toString());
     }
 }

@@ -3,16 +3,12 @@ package engine.model.boat;
 
 import engine.model.Model;
 import engine.model.rower.Rower;
-import javafx.util.Pair;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 @XmlRootElement(name = "Boat")
@@ -183,20 +179,20 @@ public class Boat extends Model implements Serializable {
             this.description = description;
         }
 
-        public static List<Pair<eBoatType, Integer>> toList() {
+        public static List<Map.Entry<eBoatType, Integer>> toList() {
             return toList(null);
         }
 
-        public static List<Pair<eBoatType, Integer>> toList(eBoatType boatType) {
+        public static List<Map.Entry<eBoatType, Integer>> toList(eBoatType boatType) {
             int i = 0;
-            List<Pair<eBoatType, Integer>> result = new ArrayList<>();
+            List<Map.Entry<eBoatType, Integer>> result = new ArrayList<>();
 
             for (eBoatType type : eBoatType.values()) {
                 if (boatType == null) {
-                    result.add(new Pair<>(type, i++));
+                    result.add(new AbstractMap.SimpleEntry<>(type, i++));
                 } else {
                     if (boatType.numOfRowers == type.numOfRowers) {
-                        result.add(new Pair<>(type, i++));
+                        result.add(new AbstractMap.SimpleEntry<>(type, i++));
                     }
                 }
             }

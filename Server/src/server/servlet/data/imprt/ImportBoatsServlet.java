@@ -1,7 +1,6 @@
 package server.servlet.data.imprt;
 
 import engine.api.EngineContext;
-import javafx.util.Pair;
 import server.utils.Utils;
 
 import javax.servlet.ServletException;
@@ -12,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 @WebServlet(urlPatterns = "/data/import/boats")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5)
@@ -19,7 +19,7 @@ public class ImportBoatsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
-        Pair<Boolean, String> data = Utils.parsePartsRequest(req);
+        Map.Entry<Boolean, String> data = Utils.parsePartsRequest(req);
 
         try (PrintWriter out = resp.getWriter()) {
             if (data.getKey() == null || data.getValue().isEmpty()) {

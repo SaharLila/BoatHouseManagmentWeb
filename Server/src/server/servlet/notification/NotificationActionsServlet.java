@@ -25,9 +25,9 @@ public class NotificationActionsServlet extends HttpServlet {
         try (PrintWriter out = resp.getWriter()) {
             if (id != null) {
                 loggedInUser.setNotificationWatched(id);
-                out.println(Utils.createJsonSuccessObject(null));
+                out.println(Utils.createJsonSuccessObject(true));
             } else {
-                out.println(Utils.createJsonErrorObject(null));
+                out.println(Utils.createJsonErrorObject(false));
             }
 
         }

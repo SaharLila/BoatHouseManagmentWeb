@@ -2,7 +2,6 @@ package server.servlet.general;
 
 
 import engine.api.EngineContext;
-import javafx.util.Pair;
 import server.constant.Constants;
 import server.utils.Utils;
 
@@ -16,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.Map;
 
 
 @WebServlet(name = "login", urlPatterns = "/login")
@@ -47,7 +47,7 @@ public class LoginServlet extends HttpServlet {
                 out.println(Utils.createJsonErrorObject("Email and password can't be empty"));
             } else {
                 EngineContext eng = (EngineContext) req.getServletContext().getAttribute(Constants.engineAtt);
-                Pair<Boolean, String> res = eng.verifyLoginDetails(email, password);
+                Map.Entry<Boolean, String> res = eng.verifyLoginDetails(email, password);
 
                 if (!res.getKey()) {
                     out.println(Utils.createJsonErrorObject(res.getValue()));

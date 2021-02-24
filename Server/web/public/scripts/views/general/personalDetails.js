@@ -1,6 +1,22 @@
 const editBtnEl = document.getElementById("editBtn");
 let loggedInUserIsAdmin;
 
+document.addEventListener("DOMContentLoaded", function () {
+    getLoggedInUser().then(loggedInUser => {
+        if (loggedInUser !== undefined) {
+            initElements(loggedInUser);
+            loggedInUserIsAdmin = loggedInUser.isAdmin;
+            insertPrivateBoats();
+            editBtnEl.addEventListener('click', (e) => editClickEventListener(e));
+        } else {
+            showError("Try again later");
+            setTimeout((function () {
+                window.location.replace("/home");
+            }), timeOutTime);
+        }
+    });
+});
+
 function initElements(loggedInUser) {
     changePasswordEl.value = loggedInUser
     updateSerialNumber(loggedInUser.serialNumber);
@@ -29,18 +45,3 @@ function editClickEventListener(e) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    getLoggedInUser().then(loggedInUser => {
-        if (loggedInUser !== undefined) {
-            initElements(loggedInUser);
-            loggedInUserIsAdmin = loggedInUser.isAdmin;
-            insertPrivateBoats();
-            editBtnEl.addEventListener('click', (e) => editClickEventListener(e));
-        } else {
-            showError("Try again later");
-            setTimeout((function () {
-                window.location.replace("/home");
-            }), timeOutTime);
-        }
-    });
-});

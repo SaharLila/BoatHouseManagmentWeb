@@ -11,13 +11,14 @@ import engine.model.activity.weekly.activity.WeeklyActivity;
 import engine.model.activity.weekly.activity.WeeklyActivityModifier;
 import engine.model.boat.Boat;
 import engine.model.boat.BoatModifier;
+import engine.model.news.News;
 import engine.model.rower.Rower;
 import engine.model.rower.RowerModifier;
 import engine.utils.data.structure.Triple;
-import javafx.util.Pair;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public interface EngineInterface {
@@ -26,7 +27,7 @@ public interface EngineInterface {
      * @param password user password (string)
      * @return true if a user with the given email and password is found within the system users list
      */
-    Pair<Boolean, String> verifyLoginDetails(String email, String password);
+    Map.Entry<Boolean, String> verifyLoginDetails(String email, String password);
 
     /**
      * @param email    user email address (string)
@@ -205,4 +206,6 @@ public interface EngineInterface {
     Rower getRowerBySessionId(String sessionId);
 
     boolean isUseAlreadyLoggedIn(String sessionId);
+
+    public News getNews();
 }

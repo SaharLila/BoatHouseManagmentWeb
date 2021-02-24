@@ -5,7 +5,6 @@ import engine.api.EngineContext;
 import engine.model.boat.Boat;
 import engine.model.boat.BoatModifier;
 import engine.model.rower.Rower;
-import javafx.util.Pair;
 import server.constant.Constants;
 import server.constant.ePages;
 import server.utils.Utils;
@@ -17,10 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @WebServlet(urlPatterns = "/boats/update")
 public class UpdateBoatServlet extends HttpServlet {
@@ -129,9 +125,9 @@ public class UpdateBoatServlet extends HttpServlet {
                 errors.add(msg);
             } else {
                 int index = Integer.parseInt(typeIndex);
-                List<Pair<Boat.eBoatType, Integer>> types =
+                List<Map.Entry<Boat.eBoatType, Integer>> types =
                         Boat.eBoatType.toList(modifier.getObjectToEdit().getBoatType());
-                Optional<Pair<Boat.eBoatType, Integer>> newTypePair = types.stream()
+                Optional<Map.Entry<Boat.eBoatType, Integer>> newTypePair = types.stream()
                         .filter(pair -> pair.getValue().equals(index)).findFirst();
                 if (newTypePair.isPresent()) {
                     modifier.setBoatType(newTypePair.get().getKey());

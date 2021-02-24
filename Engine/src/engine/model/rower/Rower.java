@@ -109,7 +109,6 @@ public class Rower extends Model implements Serializable {
         this.setId(id);
     }
 
-
     public String getName() {
         return this.name;
     }
@@ -255,18 +254,25 @@ public class Rower extends Model implements Serializable {
         return notifications;
     }
 
+    private void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
+    }
+
     public void cleanNotifications() {
         this.notifications.clear();
+        EngineContext.getInstance().saveEngine();
     }
 
     public void deleteNotification(String id) {
         this.notifications.stream()
                 .filter(notification -> notification.getId().equals(id))
                 .findFirst().ifPresent(toDelete -> this.notifications.remove(toDelete));
+        EngineContext.getInstance().saveEngine();
     }
 
     public void addNotification(String content) {
         this.notifications.add(new Notification(content));
+        EngineContext.getInstance().saveEngine();
     }
 
     public void setNotificationWatched(String id) {
@@ -288,11 +294,16 @@ public class Rower extends Model implements Serializable {
             ids[i] = privateArr.get(i);
         }
 
+        Rower result;
+
         if (!keepId) {
-            return new Rower(this.serialNumber, this.name, this.age, this.rank, this.password, this.isAdmin, this.email, this.phoneNumber, ids);
+            result = new Rower(this.serialNumber, this.name, this.age, this.rank, this.password, this.isAdmin, this.email, this.phoneNumber, ids);
         } else {
-            return new Rower(getId(), this.serialNumber, this.name, this.age, this.rank, this.password, this.isAdmin, this.email, this.phoneNumber, ids);
+            result = new Rower(getId(), this.serialNumber, this.name, this.age, this.rank, this.password, this.isAdmin, this.email, this.phoneNumber, ids);
         }
+
+        result.setNotifications(this.getNotifications());
+        return result;
     }
 
 

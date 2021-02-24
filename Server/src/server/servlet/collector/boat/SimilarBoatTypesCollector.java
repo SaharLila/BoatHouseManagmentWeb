@@ -3,7 +3,6 @@ package server.servlet.collector.boat;
 import com.google.gson.Gson;
 import engine.api.EngineContext;
 import engine.model.boat.Boat;
-import javafx.util.Pair;
 import server.servlet.json.template.model.boat.BoatTypeJson;
 import server.servlet.json.template.model.boat.BoatTypeListJson;
 import server.utils.Utils;
@@ -18,6 +17,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet("/collectors/SimilarBoatTypes")
 public class SimilarBoatTypesCollector extends HttpServlet {
@@ -26,7 +26,7 @@ public class SimilarBoatTypesCollector extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         EngineContext eng = EngineContext.getInstance();
         HashMap<String, String> data = Utils.parsePostData(req);
-        List<Pair<Boat.eBoatType, Integer>> types;
+        List<Map.Entry<Boat.eBoatType, Integer>> types;
 
         try (PrintWriter out = resp.getWriter()) {
 
@@ -55,7 +55,7 @@ public class SimilarBoatTypesCollector extends HttpServlet {
 
     }
 
-    private BoatTypeListJson prepareResult(List<Pair<Boat.eBoatType, Integer>> types) {
+    private BoatTypeListJson prepareResult(List<Map.Entry<Boat.eBoatType, Integer>> types) {
         List<BoatTypeJson> list = new ArrayList<>();
         types.forEach(pair ->
                 list.add(new BoatTypeJson(pair.getKey().getTypeDescription(), pair.getValue(),

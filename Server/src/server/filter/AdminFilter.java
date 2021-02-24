@@ -31,7 +31,8 @@ public class AdminFilter implements Filter {
         if (session != null) {
             Rower loggedInUser = EngineContext.getInstance().getLoggedInUser(session.getId());
 
-            if ((loggedInUser == null || !loggedInUser.isAdmin()) && !path.equals("/rowers/update")) {
+            if ((loggedInUser == null || !loggedInUser.isAdmin()) &&
+                    !path.equals("/rowers/update") && !path.equals("/rowers/update/password")) {
                 ((HttpServletResponse) servletResponse).sendRedirect("/unapproved");
             } else {
                 filterChain.doFilter(servletRequest, servletResponse);

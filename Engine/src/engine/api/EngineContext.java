@@ -12,15 +12,17 @@ import engine.model.activity.weekly.activity.WeeklyActivityModifier;
 import engine.model.boat.Boat;
 import engine.model.boat.BoatModifier;
 import engine.model.news.News;
+import engine.model.news.NewsItem;
 import engine.model.rower.Rower;
 import engine.model.rower.RowerModifier;
 import engine.utils.crypto.RC4;
 import engine.utils.data.structure.Triple;
 import engine.xml.XmlConverter;
-import javafx.util.Pair;
+import engine.xml.adapter.NewsAdapter;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -36,9 +38,10 @@ public class EngineContext implements EngineInterface, Serializable {
     private final WeeklyActivityCollectionManager weeklyActivities;
     private final RequestsCollectionManager requests;
     private final RowingActivitiesCollectionManager rowingActivities;
+    private final Map<String, String> sessionsUsersMap = new HashMap<>();
+    @XmlJavaTypeAdapter(NewsAdapter.class)
+    private final News news;
     private String modifyCallback;
-    private final Map <String, String> sessionsUsersMap = new HashMap<>();
-    private final News news = new News();
 
     private EngineContext() {
         this.rowers = new RowersCollectionManager(this);
@@ -47,6 +50,7 @@ public class EngineContext implements EngineInterface, Serializable {
         this.requests = new RequestsCollectionManager(this);
         this.weeklyActivities = new WeeklyActivityCollectionManager(this);
         this.rowingActivities = new RowingActivitiesCollectionManager(this);
+        this.news = new News();
     }
 
     // Constructor to convert a AdaptedEngineContext (XML object) into a EngineContext.
@@ -74,6 +78,12 @@ public class EngineContext implements EngineInterface, Serializable {
         List<RowingActivity> rowingActivities = adaptedEngineContext.getRowingActivities();
         if (adaptedEngineContext.getRowingActivities() == null) {
             rowingActivities = new ArrayList<>();
+        }
+
+        this.news = adaptedEngineContext.getNews();
+        NewsItem max = this.news.getItems().stream().max(Comparator.comparingInt(NewsItem::getId)).orElse(null);
+        if (max != null) {
+            NewsItem.initId(max.getId() + 1);
         }
 
         this.rowers = new RowersCollectionManager(this, rowers);
@@ -241,6 +251,7 @@ public class EngineContext implements EngineInterface, Serializable {
             }
         }
     }
+
 
     /**********************************************************************************************************/
 
@@ -515,13 +526,13 @@ public class EngineContext implements EngineInterface, Serializable {
 
 
     @Override
-    public Pair<Boolean, String> verifyLoginDetails(String email, String password) {
+    public Map.Entry<Boolean, String> verifyLoginDetails(String email, String password) {
         Rower rower = this.rowers.findRower(email, password);
         if (rower == null) {
-            return new Pair<>(false, "Login failed because the user doesn't exist");
+            return new AbstractMap.SimpleEntry<>(false, "Login failed because the user doesn't exist");
         }
 
-        return new Pair<>(true, null);
+        return new AbstractMap.SimpleEntry<>(true, null);
     }
 
     @Override
@@ -626,7 +637,7 @@ public class EngineContext implements EngineInterface, Serializable {
         return null;
     }
 
-    public News getNews(){
+    public News getNews() {
         return this.news;
     }
 }

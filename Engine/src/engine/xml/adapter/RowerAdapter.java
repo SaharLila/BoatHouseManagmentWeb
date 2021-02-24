@@ -41,6 +41,7 @@ public class RowerAdapter extends XmlAdapter<AdaptedRower, Rower> {
             Rower res = new Rower(serialNumber, name, age, rank, password, isAdmin, email,
                     phoneNumber, joiningDate, expirationDate);
             res.getNotes().addAll(notes);
+            res.getNotifications().addAll(adaptedRower.getNotifications());
             return res;
         } else {
             Rower res = new Rower(serialNumber, name, age, rank, password, isAdmin, email,
@@ -48,6 +49,7 @@ public class RowerAdapter extends XmlAdapter<AdaptedRower, Rower> {
             RowerModifier modifier = EngineContext.getInstance().getRowerModifier(res, null);
             Collections.addAll(modifier.getModifiablePrivateBoats(), privateBoatsSerials);
             res.getNotes().addAll(notes);
+            res.getNotifications().addAll(adaptedRower.getNotifications());
             return res;
         }
     }
@@ -67,6 +69,7 @@ public class RowerAdapter extends XmlAdapter<AdaptedRower, Rower> {
         adaptedRower.setPassword(rower.getPassword());
         adaptedRower.setPrivateBoatsSerialNumbers(rower.getPrivateBoatsSerialNumbers().toArray(new String[0]));
         adaptedRower.setRank(rower.getRank());
+        adaptedRower.setNotifications(rower.getNotifications());
 
         return adaptedRower;
     }

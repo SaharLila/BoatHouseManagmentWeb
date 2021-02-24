@@ -5,7 +5,6 @@ import engine.api.EngineContext;
 import engine.model.activity.weekly.activity.WeeklyActivity;
 import engine.model.activity.weekly.activity.WeeklyActivityModifier;
 import engine.model.boat.Boat;
-import javafx.util.Pair;
 import server.constant.Constants;
 import server.constant.ePages;
 import server.utils.Utils;
@@ -23,6 +22,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet(urlPatterns = "/weekly-activities/update")
 public class UpdateWeeklyActivityServlet extends HttpServlet {
@@ -172,10 +172,10 @@ public class UpdateWeeklyActivityServlet extends HttpServlet {
     }
 
     private String getBoatTypes(WeeklyActivity weeklyActivity) {
-        List<Pair<Boat.eBoatType, Integer>> types = Boat.eBoatType.toList();
+        List<Map.Entry<Boat.eBoatType, Integer>> types = Boat.eBoatType.toList();
         StringBuilder result = new StringBuilder();
 
-        for (Pair<Boat.eBoatType, Integer> type : types) {
+        for (Map.Entry<Boat.eBoatType, Integer> type : types) {
             boolean selected = type.getKey().equals(weeklyActivity.getBoatType());
 
             result.append(String.format("<option value=\"%d\" %s>%s</option>",
